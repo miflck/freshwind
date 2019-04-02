@@ -13,16 +13,16 @@ let actualImage;
 
 
 var theta = 0;
-var rasterwidth = 25;
+var rasterwidth = 50;
 var rasterwidthMin=15;
-var rasterwidthMax=50;
+var rasterwidthMax=100;
 var rasterwidthBefore=rasterwidth;
 
 var weight=10;
 
 
 // gui params
-var strokeWidth = 6;
+var strokeWidth = 3;
 
 var strokeWidthMin = 1;
 var strokeWidthMax = 20;
@@ -61,7 +61,7 @@ var inverted =false;
 
 
 
-var center = true;
+var center = false;
 
 
 var fade = false;
@@ -77,6 +77,11 @@ var startWaveMillis;
 var zerowaveIsRunning=false;
 
 
+
+var flutterWaveNum=0;
+var flutterFact=0;
+
+
 p5.disableFriendlyErrors = true; // disables FES
 
 
@@ -85,6 +90,8 @@ var numVanes;
 
 // performance
 let pg;
+
+var winds=[];
 
 
 
@@ -100,6 +107,10 @@ function preload() {
 
 
 function setup() {
+
+     // winds.push( new Wind(windowWidth/2,windowHeight/2) );
+
+
   //createCanvas(710, 400);
     createCanvas(windowWidth, windowHeight);
     frameRate(30);
@@ -192,7 +203,21 @@ if(zerowaveIsRunning){
   }
 
 
+
+
+//flutterWave();
+
   background(255);
+
+  winds.map((wind,i) =>{
+    wind.move();
+    wind.display();
+    if(wind.getDeleteMe()){
+      console.log("delete "+i);
+      winds.splice(i,1);
+    }
+  })
+
   push();
  //translate(-windowWidth/2,-windowHeight/2);
 
@@ -204,7 +229,27 @@ if(zerowaveIsRunning){
     if(!fade)stroke(globalStrokeColor);
      //if(!fade)stroke(globalStrokeColor);
 
-    for (var i = 0; i < numVanes; i++) {
+
+     vanes.map(vane =>{
+      vane.setColor(color(globalStrokeColor));
+      winds.map((wind,i) =>{
+
+        let outer=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.radius);
+        let inner=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.currentInnerRadius);
+        if(outer &! inner){
+          //vane.rotateTo(wind.angle);
+          vane.setDuration(wind.duration);
+         // vane.setColor(color(255,0,0));
+
+          vane.setTargetAngle(wind.angle); 
+          //console.log(wind.angle)
+          vane.hasWind=true;
+        };
+      })
+      vane.display();
+     })
+
+    //for (var i = 0; i < numVanes; i++) {
       //let loc = (vanes[i].x + vanes[i].y * img.width) * 4;
       //var c=  img.get(vanes[i].x , vanes[i].y);
      // let value = alpha(c); // Sets 'value' to 255
@@ -223,10 +268,11 @@ if(zerowaveIsRunning){
       vanes[i].targetAngle=angle;
       */
 
-      vanes[i].setColor(color(globalStrokeColor));
+    //  vanes[i].setColor(color(globalStrokeColor));
 
-      vanes[i].display();
-    }
+    //  vanes[i].display();
+    //}
+    pop();
 
       theta-=0.2;
       rasterwidthBefore=rasterwidth;
@@ -240,13 +286,17 @@ if(zerowaveIsRunning){
 
 
 function mouseMoved(){
-/*for (var i = 0; i < vanes.length; i++) {
+  /*for (var i = 0; i < vanes.length; i++) {
 		var h = new p5.Vector(mouseX-vanes[i].x,mouseY-vanes[i].y);
-		//vanes[i].targetAngle=h.heading();
+		vanes[i].setAngle(h.heading());
  	//vanes[i].targetAngle=random(0,2*PI);
     }*/
 }
 
+
+function mouseClicked(){
+winds.push(new Wind(mouseX,mouseY))
+}
 
 function calcXWave(posX,theta,waveLength){
   dx=map(posX,0,width,0,waveLength);
@@ -381,11 +431,16 @@ function wave(){
            m=map(alph,255,0,(2*PI),(2*PI+PI/4));
           }*/
 
-          let m=map(alph,0,255,0,(PI/4));
+          let m=map(alph,0,255,0,2*PI+(PI/4));
           if(inverted){
-           m=map(alph,255,0,0,(PI/4));
+           m=map(alph,255,0,0,2*PI+(PI/4));
           }
+          v[i].hasWind=false;
 
+        if(alph>5){
+          v[i].hasWind=true;
+        
+        }
           let d=map(alph,0,255,durationAlpha,durationBlack);
 
         if(fade){
@@ -401,6 +456,30 @@ function wave(){
     waveNum=0;
     waveIsRunning=false;
   }
+}
+
+
+
+function flutterWave(){
+ let dist=500;
+ let rad=sin(flutterFact)*800;
+ let speed=0.3;
+ if(flutterWaveNum<countX){
+    var v=getRow(flutterWaveNum);
+         for (var i = 0; i < v.length; i++) {
+            let alph=getAlphaVal(v[i].x , v[i].y,actualImage);
+            if(alph>5){
+              v[i].hasWind=true;
+              v[i].setFlutterParams(dist,rad,speed);
+
+            }
+         }
+         flutterWaveNum++;
+       }else{
+        flutterWaveNum=0;
+        flutterFact+=0.5;
+       }
+
 }
 
 
@@ -445,6 +524,15 @@ function startWave(){
 
 
 
+
+
+
+
+
+
+
+
+
 // Jitter class
 class WindVane {
 
@@ -453,9 +541,9 @@ class WindVane {
     this.y =iY;
     this.diameter = rasterwidth;
    // this.speed = 0.1;//map(iX,0,width,0.1,0.01);
-    if(iY<height/2)this.speed = map(iY,0,height/2,0.08,0.2);
-    if(iY>height/2)this.speed = map(iY,height/2,height,0.2,0.08);
-
+ //   if(iY<height/2)this.speed = map(iY,0,height/2,0.08,0.2);
+  //  if(iY>height/2)this.speed = map(iY,height/2,height,0.2,0.08);
+this.speed=0.1;
 
     this.position=new p5.Vector(this.x, this.y);
 		//this.angle=-PI/4;
@@ -476,12 +564,33 @@ class WindVane {
     this.duration=4000;
     this.endAnimation=millis()+this.duration;
     this.startAnimation=millis();
+
+
+    this.circleDistance=500;
+    this.circleRadius=100; 
+    this.circleRot=0; 
+    //this.rotspeed=0; 
+    this.rotspeed=random(0.5,0.1); 
+
+
+
+    this.debug=false;
+    this.hasWind=false;
+
+
+//  if(iY<height/2)this.rotspeed = map(iY,0,height/2,0.1,0.4);
+//   if(iY>height/2)this.rotspeed = map(iY,height/2,height,0.4,0.1);
+
   }
 
   move() {
     this.x += random(-this.speed, this.speed);
     this.y += random(-this.speed, this.speed);
   }
+
+
+
+
 
   display() {
 	//	var h = calcVec(  mouseX-this.x,  mouseY-this.y);
@@ -491,17 +600,22 @@ class WindVane {
     if(millis()<this.endAnimation){
       //this.currentAngle=easeInOutQuad(millis(),this.startAngle,this.thetaAngle,this.duration);
       //this.currentAngle=easeInOutSine(this.endAnimation-millis(),this.startAngle,this.thetaAngle,this.duration);
-      //this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+      this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
 
 
      }
 
      if(Math.abs( this.currentAngle-this.thetaAngle)>0.01)
      {
-      this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+      //this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
 
 
      }
+
+     //this.flutter();
+
+
+
 
 		//this.rotateTo(this.targetAngle,this.speed);
       //  this.rotateTo(this.targetAngle,this.speed);
@@ -510,6 +624,8 @@ class WindVane {
 
     strokeCap(SQUARE);
     push();
+          stroke(this.strokeColor);
+
     if(fade) {
       this.fadeTo(this.targetAlpha,0.09);
       this.strokeColor.setAlpha(this.alpha);
@@ -519,18 +635,61 @@ class WindVane {
     translate(this.x,this.y);
 		//rotate(h.heading());
 		//rotate(this.angle);
+    if(this.hasWind){
     rotate(this.currentAngle);
+    this.flutter();
+    }
 
     if(center){
       line(-this.diameter/2,0,this.diameter/2,0);
     }else{
-      line(0,0,this.diameter,0);
+      //line(0,0,this.diameter,0);
+
+
+     
+     // stroke(255,0,0);
+      //line(0,0,50,50);
+      if(this.debug){
+        stroke(this.strokeColor);
+        strokeWeight(strokeWidth);
+        }
+
+            line(0,0,this.diameter,0);
+
+
+
+    //(p.heading());
+
+
+
     }
   //  image(pg,0,0);
    // rect(-this.diameter/2,-this.diameter/2,5,5);
     pop();
+
+
+this.circleRot+=this.rotspeed;  
+
   }
   
+
+  flutter(){
+    let c=createVector(this.circleDistance,0);
+      let v=createVector(this.circleRadius/2,0);      
+      v.rotate(this.circleRot);
+      let p=c.add(v);
+      if(this.debug){
+        strokeWeight(1)
+        noFill();
+        ellipse(this.circleDistance, 0, this.circleRadius,this.circleRadius);
+        ellipse(p.x,p.y,5,5);
+        stroke(255,0,0);
+        line(0,0,p.x,p.y);
+      }
+      rotate(p.heading());
+  }
+
+
   setPosition(x,y){
     this.position=new p5.Vector(x, y);
     this.x=x;
@@ -559,13 +718,21 @@ class WindVane {
   }
 
   setTargetAngle(angle){
+    if(angle!=this.targetAngle){
     this.startAngle=this.currentAngle;
     this.targetAngle=angle;
     this.thetaAngle= this.targetAngle-this.startAngle;
     this.endAnimation=millis()+this.duration;
     this.startAnimation=millis();
+}
+  }
+
+
+  setAngle(angle){
+    this.currentAngle=angle;
 
   }
+
 
   getAngle(){
     return this.currentAngle;
@@ -584,6 +751,85 @@ class WindVane {
   }
 
 
+  setFlutterParams(dis,rad,speed){
+    this.circleDistance=dis;
+    this.circleRadius=rad;
+    this.rotspeed=speed;
+  }
+
+  getFlutterDistance(){
+    return this.circleDistance;
+  }
+  getFlutterRadius(){
+    return this.circleRadius;
+  }
+  getFlutterSpeed(){
+    return this.rotspeed;
+  }
+
+
+}
+
+
+
+class Wind {
+  constructor(iX,iY) {
+      this.x = iX;
+      this.y =iY;
+      this.radius = 0;
+      this.velocity=random(5,20);
+      this.maxRadius=2000;
+      this.innerradius=rasterwidth;
+      this.currentInnerRadius=0;
+
+      this.deleteMe=false;
+      this.angle=random(10*PI);
+      this.duration=random(500,3000);
+  }
+
+  move(){
+    this.radius+=this.velocity;
+    if(this.radius>this.maxRadius)this.deleteMe=true;
+
+    this.currentInnerRadius=this.radius-this.innerradius;
+    if(this.currentInnerRadius<0)this.currentInnerRadius=0;
+  }
+
+  display(){
+    push();
+    strokeWeight(1);
+    stroke(255,0,0,50);
+    noFill();
+    translate(this.x,this.y);
+    ellipse(0,0, this.radius*2,this.radius*2);
+    ellipse(0,0, this.currentInnerRadius*2,this.currentInnerRadius*2);
+
+    pop();
+  }
+
+  getDeleteMe(){
+    return this.deleteMe;
+  }
+
+}
+
+
+function check_a_point(a, b, x, y, r) {
+    var dist_points = (a - x) * (a - x) + (b - y) * (b - y);
+    r *= r;
+    if (dist_points < r ) {
+        return true;
+    }
+    return false;
+}
+
+function check_a_pointInner(a, b, x, y, r) {
+    var dist_points = (a - x) * (a - x) + (b - y) * (b - y);
+    r *= r;
+    if (dist_points < r ) {
+        return true;
+    }
+    return false;
 }
 
 

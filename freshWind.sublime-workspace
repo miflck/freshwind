@@ -4,6 +4,30 @@
 		"selected_items":
 		[
 			[
+				"t",
+				"true"
+			],
+			[
+				"ci",
+				"circleRadius"
+			],
+			[
+				"cir",
+				"circleDistance"
+			],
+			[
+				"circle",
+				"circleRadius"
+			],
+			[
+				"set",
+				"setAngle"
+			],
+			[
+				"tht",
+				"thetaAngle"
+			],
+			[
 				"ra",
 				"random"
 			],
@@ -70,10 +94,6 @@
 			[
 				"target",
 				"targetAlpha"
-			],
-			[
-				"set",
-				"setAlpha"
 			],
 			[
 				"stroke",
@@ -251,61 +271,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "sketch.js",
-			"settings":
-			{
-				"buffer_size": 11876,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "libraries/p5.gui.js",
-			"settings":
-			{
-				"buffer_size": 5431,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "Searching 14 files for \"quicksettings\"\n\n/Users/fgm4/htdocs_Mamp/freshWind/index.html:\n    5      <script src=\"helper.js\"></script>\n    6  \n    7:     <script src=\"libraries/quicksettings.js\" type=\"text/javascript\"></script>\n    8      <script src=\"libraries/p5.gui.js\" type=\"text/javascript\"></script>\n    9      <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n\n/Users/fgm4/htdocs_Mamp/freshWind/libraries/p5.gui.js:\n   12  \n   13    // default gui provider\n   14:   var guiProvider = 'QuickSettings';\n   15  \n   16:   // Create a GUI using QuickSettings (or DAT.GUI or ...)\n   17    p5.prototype.createGui = function(label, x, y, provider) {\n   18  \n   ..\n   25  \n   26      // create a gui using the provider\n   27:     if(provider === 'QuickSettings') {\n   28:       if(QuickSettings) {\n   29:         console.log('Creating p5.gui powered by QuickSettings.');\n   30          gui = new QSGui(label, x, y);\n   31        } else {\n   32:         console.log('QuickSettings not found. Is the script included in your HTML?');\n   33          gui = new DummyGui(label, x, y);\n   34        }\n   ..\n   76  \n   77  \n   78:   // interface for quicksettings\n   79    function QSGui(label, x, y) {\n   80  \n   81:     var qs = QuickSettings.create(x, y, label);\n   82      this.prototype = qs;\n   83  \n   ..\n  129    }\n  130  \n  131:   // Extend Quicksettings\n  132    // so it can magically create a GUI for parameters passed by name\n  133:   QuickSettings.bindParams = function(object, params) {\n  134  \n  135      // iterate over all the arguments\n  ...\n  202  \n  203    // bind params that are defined globally\n  204:   QuickSettings.bindGlobals = function(params) {\n  205      this.bindParams(window, params);\n  206    };\n\n/Users/fgm4/htdocs_Mamp/freshWind/libraries/quicksettings.js:\n    1  /**\n    2:  * @module QuickSettings\n    3   */\n    4  (function() {\n    .\n   22  \t/**\n   23  \t *\n   24: \t * @alias module:QuickSettings\n   25: \t * @lends module:QuickSettings.prototype\n   26  \t */\n   27: \tvar QuickSettings = {\n   28  \t\t_version: \"2.1\",\n   29  \t\t_topZ: 1,\n   ..\n   49  \t\t////////////////////////////////////////////////////////////////////////////////\n   50  \t\t/**\n   51: \t\t * Static method. Causes QuickSettings to ignore its default styles and instead use whatever QuickSettings stylesheet is on the page. This must be called before creating any panel in order to have any effect.\n   52  \t\t * @static\n   53  \t\t */\n   ..\n   57  \n   58  \t\t/**\n   59: \t\t * Static method. Creates a new QuickSettings Panel\n   60  \t\t * @param x\t\t\t{Number}\t\tx position of panel (default 0)\n   61  \t\t * @param y\t\t\t{Number}\t\ty position of panel (default 0)\n   62: \t\t * @param title\t\t{String}\t\ttitle of panel (default \"QuickSettings\")\n   63  \t\t * @param parent\t{HTMLElement}\tparent element (default document.body)\n   64: \t\t * @returns {module:QuickSettings}\tNew QuickSettings Panel\n   65  \t\t * @static\n   66  \t\t */\n   ..\n   89  \t\t\tthis._bindHandlers();\n   90  \t\t\tthis._createPanel(x, y, parent);\n   91: \t\t\tthis._createTitleBar(title || \"QuickSettings\");\n   92  \t\t\tthis._createContent();\n   93  \n   ..\n  162  \t\t_createPanel: function(x, y, parent) {\n  163  \t\t\tthis._panel = this._createElement(\"div\", \"qs_main\", parent || document.body);\n  164: \t\t\tthis._panel.style.zIndex = ++QuickSettings._topZ;\n  165  \t\t\tthis.setPosition(x || 0, y || 0);\n  166  \t\t\tthis._controls = {};\n  ...\n  220  \t\t * @param x\t{Number} The x position.\n  221  \t\t * @param y\t{Number} The y position.\n  222: \t\t * @returns {module:QuickSettings}\n  223  \t\t */\n  224  \t\tsetPosition: function(x, y) {\n  ...\n  232  \t\t * @param w\t{Number} The width of the panel.\n  233  \t\t * @param h\t{Number} The height of the panel.\n  234: \t\t * @returns {module:QuickSettings}\n  235  \t\t */\n  236  \t\tsetSize: function(w, h) {\n  ...\n  244  \t\t * Sets the width of the panel.\n  245  \t\t * @param w\t{Number} The width of the panel.\n  246: \t\t * @returns {module:QuickSettings}\n  247  \t\t */\n  248  \t\tsetWidth: function(w) {\n  ...\n  255  \t\t * Sets the height of the panel.\n  256  \t\t * @param h\t{Number} The height of the panel.\n  257: \t\t * @returns {module:QuickSettings}\n  258  \t\t */\n  259  \t\tsetHeight: function(h) {\n  ...\n  268  \t\t * Sets whether or not the panel can be dragged.\n  269  \t\t * @param draggable {Boolean} Whether or not the panel can be dragged.\n  270: \t\t * @returns {module:QuickSettings}\n  271  \t\t */\n  272  \t\tsetDraggable: function(draggable) {\n  ...\n  283  \t\t_startDrag: function(event) {\n  284  \t\t\tif(this._draggable) {\n  285: \t\t\t\tthis._panel.style.zIndex = ++QuickSettings._topZ;\n  286  \t\t\t\tdocument.addEventListener(\"mousemove\", this._drag);\n  287  \t\t\t\tdocument.addEventListener(\"mouseup\", this._endDrag);\n  ...\n  325  \t\t * Sets whether or not the panel will snap to a grid location when moved.\n  326  \t\t * @param snap {Boolean} Whether or not the panel will snap to a grid location when moved.\n  327: \t\t * @returns {module:QuickSettings}\n  328  \t\t */\n  329  \t\tsetSnapToGrid: function(snap) {\n  ...\n  335  \t\t * Sets the size of the grid that the panel will snap to if snapping is set to true.\n  336  \t\t * @param size {Number} The size of the grid.\n  337: \t\t * @returns {module:QuickSettings}\n  338  \t\t */\n  339  \t\tsetGridSize: function(size) {\n  ...\n  348  \t\t * Sets a function that will be called whenever any value in the panel is changed.\n  349  \t\t * @param handler {Function}\n  350: \t\t * @returns {module:QuickSettings}\n  351  \t\t */\n  352  \t\tsetGlobalChangeHandler: function(handler) {\n  ...\n  366  \t\t/**\n  367  \t\t * Hides the panel.\n  368: \t\t * @returns {module:QuickSettings}\n  369  \t\t */\n  370  \t\thide: function() {\n  ...\n  376  \t\t/**\n  377  \t\t * Shows the panel.\n  378: \t\t * @returns {module:QuickSettings}\n  379  \t\t */\n  380  \t\tshow: function() {\n  381  \t\t\tthis._panel.style.visibility = \"visible\";\n  382: \t\t\tthis._panel.style.zIndex = ++QuickSettings._topZ;\n  383  \t\t\tthis._hidden = false;\n  384  \t\t\treturn this;\n  ...\n  387  \t\t/**\n  388  \t\t * Toggles the panel from hidden to visible and back.\n  389: \t\t * @returns {module:QuickSettings}\n  390  \t\t */\n  391  \t\ttoggleVisibility: function() {\n  ...\n  402  \t\t * Sets whether or not the panel will collapse and expand when the title is double clicked.\n  403  \t\t * @param collapsible {Boolean} Wheter or not the panel can collapse and expand.\n  404: \t\t * @returns {module:QuickSettings}\n  405  \t\t */\n  406  \t\tsetCollapsible: function(collapsible) {\n  ...\n  417  \t\t/**\n  418  \t\t * Collapses the panel showing only the title bar.\n  419: \t\t * @returns {module:QuickSettings}\n  420  \t\t */\n  421  \t\tcollapse: function() {\n  ...\n  427  \t\t/**\n  428  \t\t * If panel is collapsed, re-expands it.\n  429: \t\t * @returns {module:QuickSettings}\n  430  \t\t */\n  431  \t\texpand: function() {\n  ...\n  437  \t\t/**\n  438  \t\t * Toggles the panel back and forth between collapsed and expanded states.\n  439: \t\t * @returns {module:QuickSettings}\n  440  \t\t */\n  441  \t\ttoggleCollapsed: function() {\n  ...\n  452  \t\t * Sets a key that, when pressed, will show and hide the panel.\n  453  \t\t * @param char\n  454: \t\t * @returns {module:QuickSettings}\n  455  \t\t */\n  456  \t\tsetKey: function(char) {\n  ...\n  479  \t\t * Removes a given control from the panel.\n  480  \t\t * @param title {String} The title of the control to remove.\n  481: \t\t * @returns {module:QuickSettings}\n  482  \t\t */\n  483  \t\tremoveControl: function(title) {\n  ...\n  495  \t\t * Enables the given control.\n  496  \t\t * @param title {String} The title of the control to enable.\n  497: \t\t * @returns {module:QuickSettings}\n  498  \t\t */\n  499  \t\tenableControl: function(title) {\n  ...\n  507  \t\t * Disables the given control.\n  508  \t\t * @param title {String} The title of the control to disable.\n  509: \t\t * @returns {module:QuickSettings}\n  510  \t\t */\n  511  \t\tdisableControl: function(title) {\n  ...\n  519  \t\t * Hides the given control.\n  520  \t\t * @param title {String} The title of the control to hide.\n  521: \t\t * @returns {module:QuickSettings}\n  522  \t\t */\n  523  \t\thideControl: function(title) {\n  ...\n  531  \t\t * Shows the given control.\n  532  \t\t * @param title {String} The title of the control to show.\n  533: \t\t * @returns {module:QuickSettings}\n  534  \t\t */\n  535  \t\tshowControl: function(title) {\n  ...\n  545  \t\t * @param style {String} The name of the style.\n  546  \t\t * @param value {Various} The new value of the style.\n  547: \t\t * @returns {module:QuickSettings}\n  548  \t\t */\n  549  \t\toverrideStyle: function(title, style, value) {\n  ...\n  557  \t\t * Hides the title label of a given control.\n  558  \t\t * @param title {String} The title of the control.\n  559: \t\t * @returns {module:QuickSettings}\n  560  \t\t */\n  561  \t\thideTitle: function(title) {\n  ...\n  570  \t\t * Shows the title label of a given control.\n  571  \t\t * @param title {String} The title of the control.\n  572: \t\t * @returns {module:QuickSettings}\n  573  \t\t */\n  574  \t\tshowTitle: function(title) {\n  ...\n  582  \t\t/**\n  583  \t\t * Hides the title labels of all controls.\n  584: \t\t * @returns {module:QuickSettings}\n  585  \t\t */\n  586  \t\thideAllTitles: function() {\n  ...\n  596  \t\t/**\n  597  \t\t * Shows the title labels of all controls. Button and booleans have no title labels.\n  598: \t\t * @returns {module:QuickSettings}\n  599  \t\t */\n  600  \t\tshowAllTitles: function() {\n  ...\n  612  \t\t////////////////////////////////////////////////////////////////////////////////\n  613  \t\t/**\n  614: \t\t * Creates a new QuickSettings Panel from a JSON string or object.\n  615  \t\t * @param json {Object|String} The JSON string or object to parse.\n  616  \t\t * @param parent {HTMLElement} The parent element to attach the new panel to.\n  617  \t\t * @param scope {Object} The object to look for any callbacks on.\n  618: \t\t * @returns {module:QuickSettings}\n  619  \t\t */\n  620  \t\tparse: function(json, parent, scope) {\n  ...\n  622  \t\t\t\tjson = JSON.parse(json);\n  623  \t\t\t}\n  624: \t\t\tvar panel = QuickSettings.create(json.x, json.y, json.title, parent);\n  625  \t\t\tpanel.setDraggable(json.draggable == null ? true : json.draggable);\n  626  \t\t\tpanel.setCollapsible(json.collapsible == null ? true : json.collapsible);\n  ...\n  766  \t\t * @param step {Number} Size of value increments.\n  767  \t\t * @param callback {Function} Callback function to call when control value changes.\n  768: \t\t * @returns {module:QuickSettings}\n  769  \t\t */\n  770  \t\taddRange: function(title, min, max, value, step, callback) {\n  ...\n  780  \t\t * @param step {Number} Size of value increments.\n  781  \t\t * @param callback {Function} Callback function to call when control value changes.\n  782: \t\t * @returns {module:QuickSettings}\n  783  \t\t */\n  784  \t\taddNumber: function(title, min, max, value, step, callback) {\n  ...\n  834  \t\t * @param step {Number} Size of value increments.\n  835  \t\t * @param object {Object} Object the control is bound to. When the value of the control changes, a property on this object, with the name of the title of this control, will be set to the current value of this control.\n  836: \t\t * @returns {module:QuickSettings}\n  837  \t\t */\n  838  \t\tbindRange: function(title, min, max, value, step, object) {\n  ...\n  850  \t\t * @param step {Number} Size of value increments.\n  851  \t\t * @param object {Object} Object the control is bound to. When the value of the control changes, a property on this object, with the name of the title of this control, will be set to the current value of this control.\n  852: \t\t * @returns {module:QuickSettings}\n  853  \t\t */\n  854  \t\tbindNumber: function(title, min, max, value, step, object) {\n  ...\n  880  \t\t * @param title {Number} The title of the control to set the value on.\n  881  \t\t * @param value {Number} The value to set.\n  882: \t\t * @returns {module:QuickSettings}\n  883  \t\t */\n  884  \t\tsetRangeValue: function(title, value) {\n  ...\n  890  \t\t * @param title {Number} The title of the control to set the value on.\n  891  \t\t * @param value {Number} The value to set.\n  892: \t\t * @returns {module:QuickSettings}\n  893  \t\t */\n  894  \t\tsetNumberValue: function(title, value) {\n  ...\n  909  \t\t * @param max {Number} The maximum value of the control.\n  910  \t\t * @param step {Number} Size of value increments.\n  911: \t\t * @returns {module:QuickSettings}\n  912  \t\t */\n  913  \t\tsetRangeParameters: function(title, min, max, step) {\n  ...\n  921  \t\t * @param max {Number} The maximum value of the control.\n  922  \t\t * @param step {Number} Size of value increments.\n  923: \t\t * @returns {module:QuickSettings}\n  924  \t\t */\n  925  \t\tsetNumberParameters: function(title, min, max, step) {\n  ...\n  940  \t\t * @param value {Boolean} The initial value of this control.\n  941  \t\t * @param callback {Function} A callback function that will be called when the value of this control changes.\n  942: \t\t * @returns {module:QuickSettings}\n  943  \t\t */\n  944  \t\taddBoolean: function(title, value, callback) {\n  ...\n  982  \t\t * @param value {Boolean} The initial value of this control.\n  983  \t\t * @param object {Object} Object the control is bound to. When the value of the control changes, a property on this object, with the name of the title of this control, will be set to the current value of this control.\n  984: \t\t * @returns {module:QuickSettings}\n  985  \t\t */\n  986  \t\tbindBoolean: function(title, value, object) {\n  ...\n 1003  \t\t * @param title {String} The title of the control to set the value of.\n 1004  \t\t * @param value {Boolean} The new value of the control.\n 1005: \t\t * @returns {module:QuickSettings}\n 1006  \t\t */\n 1007  \t\tsetBoolean: function(title, value) {\n ....\n 1021  \t\t * @param title {String} The title of the control.\n 1022  \t\t * @param callback {Function} Callback function to be called when the button is clicked.\n 1023: \t\t * @returns {module:QuickSettings}\n 1024  \t\t */\n 1025  \t\taddButton: function(title, callback) {\n ....\n 1055  \t\t * @param color {String} The initial color value for this control.\n 1056  \t\t * @param callback {Function} Callback that will be called when the value of this control changes.\n 1057: \t\t * @returns {module:QuickSettings}\n 1058  \t\t */\n 1059  \t\taddColor: function(title, color, callback) {\n ....\n 1098  \t\t * @param color {String} The initial color value for this control.\n 1099  \t\t * @param object {Object} Object the control is bound to. When the value of the control changes, a property on this object, with the name of the title of this control, will be set to the current value of this control.\n 1100: \t\t * @returns {module:QuickSettings}\n 1101  \t\t */\n 1102  \t\tbindColor: function(title, color, object) {\n ....\n 1119  \t\t * @param title {String} The title of the control to set the value for.\n 1120  \t\t * @param value {String} The new value to set on the control.\n 1121: \t\t * @returns {module:QuickSettings}\n 1122  \t\t */\n 1123  \t\tsetColor: function(title, value) {\n ....\n 1140  \t\t * @param text {String} The initial text value to put in the control.\n 1141  \t\t * @param callback {Function} Callback that will be called when the value of this control changes.\n 1142: \t\t * @returns {module:QuickSettings}\n 1143  \t\t */\n 1144  \t\taddText: function(title, text, callback) {\n ....\n 1175  \t\t * @param text {String} The initial text value to put in the control.\n 1176  \t\t * @param object {Object} Object the control is bound to. When the value of the control changes, a property on this object, with the name of the title of this control, will be set to the current value of this control.\n 1177: \t\t * @returns {module:QuickSettings}\n 1178  \t\t */\n 1179  \t\tbindText: function(title, text, object) {\n ....\n 1196  \t\t * @param title {String} The title of the control to set the text value on.\n 1197  \t\t * @param text {String} The new text value to set.\n 1198: \t\t * @returns {module:QuickSettings}\n 1199  \t\t */\n 1200  \t\tsetText: function(title, text) {\n ....\n 1218  \t\t * @param text {String} The initial text value to put in the control.\n 1219  \t\t * @param callback {Function} Callback that will be called when the value of this control changes.\n 1220: \t\t * @returns {module:QuickSettings}\n 1221  \t\t */\n 1222  \t\taddPassword: function(title, text, callback) {\n ....\n 1252  \t\t * @param text {String} The initial text value to put in the control.\n 1253  \t\t * @param object {Object} Object the control is bound to. When the value of the control changes, a property on this object, with the name of the title of this control, will be set to the current value of this control.\n 1254: \t\t * @returns {module:QuickSettings}\n 1255  \t\t */\n 1256  \t\tbindPassword: function(title, text, object) {\n ....\n 1270  \t\t * @param text {String} The initial text value to put in the control.\n 1271  \t\t * @param callback {Function} Callback that will be called when the value of this control changes.\n 1272: \t\t * @returns {module:QuickSettings}\n 1273  \t\t */\n 1274  \t\taddTextArea: function(title, text, callback) {\n ....\n 1304  \t\t * @param title {String} The control to set the number of rows on.\n 1305  \t\t * @param rows {Integer} The number of rows in the text area.\n 1306: \t\t * @returns {module:QuickSettings}\n 1307  \t\t */\n 1308  \t\tsetTextAreaRows: function(title, rows) {\n ....\n 1316  \t\t * @param text {String} The initial text value to put in the control.\n 1317  \t\t * @param object {Object} Object the control is bound to. When the value of the control changes, a property on this object, with the name of the title of this control, will be set to the current value of this control.\n 1318: \t\t * @returns {module:QuickSettings}\n 1319  \t\t */\n 1320  \t\tbindTextArea: function(title, text, object) {\n ....\n 1381  \t\t * @param title {String} The title of the control to set the date on.\n 1382  \t\t * @param date {String|Date} A string in the format \"YYYY-MM-DD\" or a Date object.\n 1383: \t\t * @returns {module:QuickSettings}\n 1384  \t\t */\n 1385  \t\tsetDate: function(title, date) {\n ....\n 1490  \t\t * @param title {String} The title of the control to set the date on.\n 1491  \t\t * @param time {String|Date} A string in the format \"HH:MM\", \"HH:MM:SS\" or a Date object.\n 1492: \t\t * @returns {module:QuickSettings}\n 1493  \t\t */\n 1494  \t\tsetTime: function(title, time) {\n ....\n 1574  \t\t * @param items {Array} An array of strings or values that will be converted to string and displayed as options.\n 1575  \t\t * @param callback {Function} Callback function that will be called when a new option is chosen.\n 1576: \t\t * @returns {module:QuickSettings}\n 1577  \t\t */\n 1578  \t\taddDropDown: function(title, items, callback) {\n ....\n 1617  \t\t * @param items {Array} An array of strings or values that will be converted to string and displayed as options.\n 1618  \t\t * @param object {Object} Object the control is bound to. When the value of the control changes, a property on this object, with the name of the title of this control, will be set to the current value of this control.\n 1619: \t\t * @returns {module:QuickSettings}\n 1620  \t\t */\n 1621  \t\tbindDropDown: function(title, items, object) {\n ....\n 1645  \t\t * @param title {String} The title of the control to set the selected index of.\n 1646  \t\t * @param index {Integer} The index of the option array to set as selected.\n 1647: \t\t * @returns {module:QuickSettings}\n 1648  \t\t */\n 1649  \t\tsetDropDownIndex: function(title, index) {\n ....\n 1668  \t\t * @param title {String} The title of the control.\n 1669  \t\t * @param imageURL {String} The URL to the image.\n 1670: \t\t * @returns {module:QuickSettings}\n 1671  \t\t */\n 1672  \t\taddImage: function(title, imageURL) {\n ....\n 1689  \t\t * @param title {String} The title of the control to set a new image URL for.\n 1690  \t\t * @param imageURL {String} The new URL.\n 1691: \t\t * @returns {module:QuickSettings}\n 1692  \t\t */\n 1693  \t\tsetImageURL: function(title, imageURL) {\n ....\n 1705  \t\t * @param value (Number} The initial value of the control.\n 1706  \t\t * @param valueDisplay {String} How to display the value. Valid values: \"percent\" displays percent of max, \"numbers\" displays value and max as fraction. Anything else, value is not shown.\n 1707: \t\t * @returns {module:QuickSettings}\n 1708  \t\t */\n 1709  \t\taddProgressBar: function(title, max, value, valueDisplay) {\n ....\n 1752  \t\t * @param value {Number} The progress value to set.\n 1753  \t\t * @param max {Number} The max value of the control. (Defaults to the previously set max value)\n 1754: \t\t * @returns {module:QuickSettings}\n 1755  \t\t */\n 1756  \t\tsetProgress: function(title, value, max) {\n ....\n 1782  \t\t * @param filter {String} Species what file types the chooser will accept. See below.\n 1783  \t\t * @param callback {Function} Callback function that will be called when a file is chosen.\n 1784: \t\t * @returns {module:QuickSettings}\n 1785  \t\t */\n 1786  \t\taddFileChooser: function(title, labelStr, filter, callback) {\n ....\n 1833  \t\t * @param title {String} The title of the control.\n 1834  \t\t * @param element {HTMLElement} The element to add.\n 1835: \t\t * @returns {module:QuickSettings}\n 1836  \t\t */\n 1837  \t\taddElement: function(title, element) {\n ....\n 1856  \t\t * @param title {String} The title of the control.\n 1857  \t\t * @param html {String} The HTML to add.\n 1858: \t\t * @returns {module:QuickSettings}\n 1859  \t\t */\n 1860  \t\taddHTML: function(title, html) {\n ....\n 1885  \t\t * @param title {String} The title of the control to set the HTML in.\n 1886  \t\t * @param html {String} The new HTML for the control.\n 1887: \t\t * @returns {module:QuickSettings}\n 1888  \t\t */\n 1889  \t\tsetHTML: function(title, html) {\n ....\n 1898  \t////////////////////////////////////////////////////////////////////////////////\n 1899  \tif (typeof define === \"function\" && define.amd) {\n 1900: \t    define(QuickSettings);\n 1901  \t} else {\n 1902: \t   window.QuickSettings = QuickSettings;\n 1903  \t}\n 1904  \n\n94 matches across 3 files\n",
-			"settings":
-			{
-				"buffer_size": 21470,
-				"line_ending": "Unix",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "sftp-config.json",
-			"settings":
-			{
-				"buffer_size": 1376,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "helper.js",
-			"settings":
-			{
-				"buffer_size": 692,
-				"encoding": "UTF-8",
-				"line_ending": "Unix",
-				"name": "function easeInOutQuad(t, b, c, d) {"
-			}
-		},
-		{
-			"file": "index.html",
-			"settings":
-			{
-				"buffer_size": 513,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -351,13 +316,14 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/fgm4/htdocs_Mamp/freshWind",
-		"/Users/fgm4/htdocs_Mamp/freshWind/assets",
-		"/Users/fgm4/htdocs_Mamp/freshWind/libraries"
+		"/Users/fgm4/htdocs_Mamp/freshWind"
 	],
 	"file_history":
 	[
 		"/Users/fgm4/htdocs_Mamp/freshWind/index.html",
+		"/Users/fgm4/htdocs_Mamp/freshWind/helper.js",
+		"/Users/fgm4/htdocs_Mamp/freshWind/sftp-config.json",
+		"/Users/fgm4/htdocs_Mamp/freshWind/sketch.js",
 		"/Users/fgm4/Repos/typoclubTalk/index.html",
 		"/Users/fgm4/Repos/typoclubTalk/notizen.rtf",
 		"/Users/fgm4/Repos/typoclubTalk/css/addons.css",
@@ -481,10 +447,7 @@
 		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/modules/sigi_core/classes/Backend/Actionbox.php",
 		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/modules/sigi_core/views/backend/medialink/container.php",
 		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/application/classes/controller/backend/backend.php",
-		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/application/views/templates/contents/collection_ex_by_type/viewfrontend.php",
-		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/application/views/templates/contents/MARS/viewbackend.php",
-		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/application/views/templates/pages/standard/viewfrontend.php",
-		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/media/styles/css/screen.css"
+		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/application/views/templates/contents/collection_ex_by_type/viewfrontend.php"
 	],
 	"find":
 	{
@@ -503,6 +466,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"center",
+			"setAngle",
+			"mouse",
+			"durationAlpha",
+			"fade",
 			"intervall",
 			"interval",
 			"inversed",
@@ -574,594 +542,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "sketch.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11876,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3360,
-								3360
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2189.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "libraries/p5.gui.js",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 5431,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 21470,
-						"regions":
-						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										173,
-										186
-									],
-									[
-										495,
-										508
-									],
-									[
-										550,
-										563
-									],
-									[
-										748,
-										761
-									],
-									[
-										782,
-										795
-									],
-									[
-										854,
-										867
-									],
-									[
-										967,
-										980
-									],
-									[
-										1143,
-										1156
-									],
-									[
-										1224,
-										1237
-									],
-									[
-										1343,
-										1356
-									],
-									[
-										1441,
-										1454
-									],
-									[
-										1621,
-										1634
-									],
-									[
-										1816,
-										1829
-									],
-									[
-										1916,
-										1929
-									],
-									[
-										1955,
-										1968
-									],
-									[
-										2003,
-										2016
-									],
-									[
-										2209,
-										2222
-									],
-									[
-										2277,
-										2290
-									],
-									[
-										2494,
-										2507
-									],
-									[
-										2705,
-										2718
-									],
-									[
-										2829,
-										2842
-									],
-									[
-										2848,
-										2861
-									],
-									[
-										3023,
-										3036
-									],
-									[
-										3262,
-										3275
-									],
-									[
-										3485,
-										3498
-									],
-									[
-										3696,
-										3709
-									],
-									[
-										3889,
-										3902
-									],
-									[
-										4082,
-										4095
-									],
-									[
-										4317,
-										4330
-									],
-									[
-										4507,
-										4520
-									],
-									[
-										4873,
-										4886
-									],
-									[
-										5126,
-										5139
-									],
-									[
-										5358,
-										5371
-									],
-									[
-										5516,
-										5529
-									],
-									[
-										5649,
-										5662
-									],
-									[
-										5796,
-										5809
-									],
-									[
-										5983,
-										5996
-									],
-									[
-										6277,
-										6290
-									],
-									[
-										6462,
-										6475
-									],
-									[
-										6620,
-										6633
-									],
-									[
-										6810,
-										6823
-									],
-									[
-										7009,
-										7022
-									],
-									[
-										7228,
-										7241
-									],
-									[
-										7442,
-										7455
-									],
-									[
-										7658,
-										7671
-									],
-									[
-										7869,
-										7882
-									],
-									[
-										8077,
-										8090
-									],
-									[
-										8300,
-										8313
-									],
-									[
-										8533,
-										8546
-									],
-									[
-										8748,
-										8761
-									],
-									[
-										8914,
-										8927
-									],
-									[
-										9121,
-										9134
-									],
-									[
-										9321,
-										9334
-									],
-									[
-										9638,
-										9651
-									],
-									[
-										9790,
-										9803
-									],
-									[
-										10197,
-										10210
-									],
-									[
-										10482,
-										10495
-									],
-									[
-										10902,
-										10915
-									],
-									[
-										11320,
-										11333
-									],
-									[
-										11585,
-										11598
-									],
-									[
-										11829,
-										11842
-									],
-									[
-										12067,
-										12080
-									],
-									[
-										12318,
-										12331
-									],
-									[
-										12634,
-										12647
-									],
-									[
-										13050,
-										13063
-									],
-									[
-										13313,
-										13326
-									],
-									[
-										13580,
-										13593
-									],
-									[
-										13875,
-										13888
-									],
-									[
-										14295,
-										14308
-									],
-									[
-										14563,
-										14576
-									],
-									[
-										14857,
-										14870
-									],
-									[
-										15278,
-										15291
-									],
-									[
-										15537,
-										15550
-									],
-									[
-										15829,
-										15842
-									],
-									[
-										16254,
-										16267
-									],
-									[
-										16559,
-										16572
-									],
-									[
-										16825,
-										16838
-									],
-									[
-										17244,
-										17257
-									],
-									[
-										17533,
-										17546
-									],
-									[
-										17816,
-										17829
-									],
-									[
-										18149,
-										18162
-									],
-									[
-										18618,
-										18631
-									],
-									[
-										18911,
-										18924
-									],
-									[
-										19145,
-										19158
-									],
-									[
-										19392,
-										19405
-									],
-									[
-										19770,
-										19783
-									],
-									[
-										20068,
-										20081
-									],
-									[
-										20378,
-										20391
-									],
-									[
-										20633,
-										20646
-									],
-									[
-										20854,
-										20867
-									],
-									[
-										21101,
-										21114
-									],
-									[
-										21343,
-										21356
-									],
-									[
-										21394,
-										21407
-									],
-									[
-										21410,
-										21423
-									]
-								],
-								"scope": ""
-							}
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"detect_indentation": false,
-							"incomplete_sync": null,
-							"line_numbers": false,
-							"output_tag": 1,
-							"result_base_dir": "",
-							"result_file_regex": "^([^ \t].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 2168.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "sftp-config.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1376,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								189,
-								189
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "helper.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 692,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								661,
-								661
-							]
-						],
-						"settings":
-						{
-							"auto_name": "function easeInOutQuad(t, b, c, d) {",
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "index.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 513,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								483,
-								483
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				}
 			]
 		}
 	],
