@@ -105,6 +105,9 @@ function preload() {
 }
 
 
+let colors;
+
+
 function setup() {
 
      // winds.push( new Wind(windowWidth/2,windowHeight/2) );
@@ -116,7 +119,8 @@ function setup() {
 
   // Create Layout GUI
   gui = createGui('P5 GUI');
-  gui.addGlobals(  'images','globalStrokeColor', 'rasterwidth','strokeWidth','fade','center','inverted','durationBlack','durationAlpha','durationDilitation','intervall','howMuchRows');
+  //gui.addGlobals( 'images','globalStrokeColor', 'rasterwidth','strokeWidth','fade','center','inverted','durationBlack','durationAlpha','durationDilitation','intervall','howMuchRows');
+  gui.addGlobals( 'rasterwidth','strokeWidth','center');
 
 
   img1.loadPixels();
@@ -135,6 +139,18 @@ function setup() {
   actualImageIndex=0;
 
   createVanes();
+
+colors=[];
+colors.push(color('#5EC29C'));
+colors.push(color('#3DAA9A'));
+colors.push(color('#2A9192'));
+colors.push(color('#287884'));
+colors.push(color('#2D5F70'));
+colors.push(color('#008FBD'));
+colors.push(color('#007AC0'));
+colors.push(color('#0062B8'));
+
+
 }
 
 
@@ -230,9 +246,9 @@ if(zerowaveIsRunning){
 
     strokeWeight(strokeWidth);
     noStroke();
-    colorMode(RGB);
+    //colorMode(RGB);
 
-    if(!fade)stroke(globalStrokeColor);
+    //if(!fade)stroke(globalStrokeColor);
      //if(!fade)stroke(globalStrokeColor);
 
 
@@ -261,7 +277,7 @@ if(zerowaveIsRunning){
             duration*=5;
             console.log(angle,duration)
           }*/
-
+          vane.setColor(wind.color);
           if(alph>5){
             vane.setDuration(duration+500);
             vane.setTargetAngle(angle+PI/4); 
@@ -271,7 +287,7 @@ if(zerowaveIsRunning){
           }else{
             vane.setAlphaDuration(duration-500);
             vane.setTargetAlpha(160);
-                        vane.setFlutterParams(500,100,0.09)
+            vane.setFlutterParams(500,100,0.09)
 
           }
 
@@ -643,13 +659,18 @@ class WindVane {
   display() {
 
     if(millis()<this.endAnimation){
-      this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+      //this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+      this.currentAngle=easeInOutSine(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+
+      
      }else{
       this.currentAngle=this.targetAngle;
      }
 
     if(millis()<this.endAlphaAnimation){
-      this.currentAlpha=easeInOutQuad(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
+     // this.currentAlpha=easeInOutQuad(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
+      this.currentAlpha=easeInOutSine(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
+
     }
    
 
@@ -846,7 +867,9 @@ class Wind {
 
       this.duration=map(rand,3,10,1000,3000);//random(500,3000);
       
-      this.color=color(random(255),random(255),random(255),random(255));
+
+      var rn=floor(random(0,colors.length-0.9));
+      this.color=color(colors[rn]);
 
       this.flutterDistance=random(200,500);
       this.flutterRadius=random(50,200);
