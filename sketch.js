@@ -7,13 +7,13 @@ let img2; // Declare variable 'img'.
 let img3; // Declare variable 'img'.
 let img4; // Declare variable 'img'.
 let img5; // Declare variable 'img'.
-let img6; // Declare variable 'img'.
+let imageArray=[];
 
 let actualImage;
 
 
 var theta = 0;
-var rasterwidth = 50;
+var rasterwidth = 30;
 var rasterwidthMin=15;
 var rasterwidthMax=100;
 var rasterwidthBefore=rasterwidth;
@@ -30,7 +30,7 @@ var strokeWidthMax = 20;
 var globalStrokeColor = '#0000dd';
 
 var radius = 20;
-var images = ['img1', 'img2', 'img3', 'img4', 'img5','img6'];
+var images = ['img1', 'img2', 'img3', 'img4', 'img5'];
 
 
 
@@ -101,7 +101,6 @@ function preload() {
     img3 = loadImage('assets/3.png');
     img4 = loadImage('assets/4.png');
     img5 = loadImage('assets/5.png');
-    img6 = loadImage('assets/6.png');
 
 }
 
@@ -125,9 +124,16 @@ function setup() {
   img3.loadPixels();
   img4.loadPixels();
   img5.loadPixels();
-  img6. loadPixels();
+
+  imageArray.push(img1);
+  imageArray.push(img2);
+  imageArray.push(img3);
+  imageArray.push(img4);
+  imageArray.push(img5);
 
   actualImage=img1;
+  actualImageIndex=0;
+
   createVanes();
 }
 
@@ -155,7 +161,7 @@ function createVanes(){
 }
 
 function draw() {
-
+/*
   switch(images){
         case 'img1':
           actualImage=img1;
@@ -175,7 +181,7 @@ function draw() {
         case 'img6':
           actualImage=img6;
         break;
-  }
+  }*/
 
   // Gui changes
   if(rasterwidth!=rasterwidthBefore){
@@ -231,19 +237,51 @@ if(zerowaveIsRunning){
 
 
      vanes.map(vane =>{
-      vane.setColor(color(globalStrokeColor));
+          let alph=getAlphaVal(vane.x , vane.y,actualImage);
+            vane.hasWind=false;
+
+          if(alph>5){
+           // vane.setTargetAlpha(255);
+          }
+     // vane.setColor(color(globalStrokeColor));
       winds.map((wind,i) =>{
 
         let outer=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.radius);
         let inner=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.currentInnerRadius);
-        if(outer &! inner){
-          //vane.rotateTo(wind.angle);
-          vane.setDuration(wind.duration);
-         // vane.setColor(color(255,0,0));
+       
+       if(outer &! inner){
 
-          vane.setTargetAngle(wind.angle); 
+          var angle=wind.angle
+          var duration=wind.duration
+          vane.setDuration(duration);
+          vane.setTargetAngle(angle); 
+
+          /*if(random()<0.3){
+            angle+=20*PI;
+            duration*=5;
+            console.log(angle,duration)
+          }*/
+
+          if(alph>5){
+            vane.setDuration(duration+500);
+            vane.setTargetAngle(angle+PI/4); 
+            vane.setAlphaDuration(duration-500);
+            vane.setTargetAlpha(255);
+            vane.setFlutterParams(500,50,0.5)
+          }else{
+            vane.setAlphaDuration(duration-500);
+            vane.setTargetAlpha(160);
+                        vane.setFlutterParams(500,100,0.09)
+
+          }
+
+       
+      
+          //vane.resetCircleRot();
+          //vane.setCircleRotMax(vane.rotMax+wind.rotMax);
+          //vane.setFlutterParams(wind.flutterDistance,wind.flutterRadius,wind.flutterSpeed);
+         // vane.setColor(wind.color);
           //console.log(wind.angle)
-          vane.hasWind=true;
         };
       })
       vane.display();
@@ -291,11 +329,16 @@ function mouseMoved(){
 		vanes[i].setAngle(h.heading());
  	//vanes[i].targetAngle=random(0,2*PI);
     }*/
+
+//winds.push(new Wind(mouseX,mouseY))
+
 }
 
 
 function mouseClicked(){
-winds.push(new Wind(mouseX,mouseY))
+actualImageIndex++;
+actualImage=imageArray[actualImageIndex%imageArray.length];
+winds.push(new Wind(mouseX,mouseY));
 }
 
 function calcXWave(posX,theta,waveLength){
@@ -540,22 +583,17 @@ class WindVane {
     this.x = iX;
     this.y =iY;
     this.diameter = rasterwidth;
-   // this.speed = 0.1;//map(iX,0,width,0.1,0.01);
- //   if(iY<height/2)this.speed = map(iY,0,height/2,0.08,0.2);
-  //  if(iY>height/2)this.speed = map(iY,height/2,height,0.2,0.08);
-this.speed=0.1;
 
     this.position=new p5.Vector(this.x, this.y);
 		//this.angle=-PI/4;
 
     this.strokeColor=color(0,100,200);
     this.alpha=255;
-    this.targetAlpha=255;
     
     this.startAngle=0;
-    //this.targetAngle=PI/2;
     this.thetaAngle=0;//this.targetAngle-this.startAngle;
     this.currentAngle=0;
+    this.targetAngle=0;
 
 
    
@@ -566,12 +604,22 @@ this.speed=0.1;
     this.startAnimation=millis();
 
 
+
+    this.startAlpha=255;
+    this.currentAlpha=255;
+    this.thetaAlpha=0;
+    this.targetAlpha=255;
+    this.alphaDuration=4000;
+    this.startAlphaAnimation=millis();
+    this.endAlphaAnimation=millis+this.alphaDuration;
+
+
     this.circleDistance=500;
     this.circleRadius=100; 
     this.circleRot=0; 
     //this.rotspeed=0; 
-    this.rotspeed=random(0.5,0.1); 
-
+    this.rotspeed=random(0.3,0.1); 
+    this.rotMax=0;
 
 
     this.debug=false;
@@ -593,83 +641,60 @@ this.speed=0.1;
 
 
   display() {
-	//	var h = calcVec(  mouseX-this.x,  mouseY-this.y);
-		
-		//var h = new p5.Vector(mouseX-this.x,mouseY-this.y);
 
     if(millis()<this.endAnimation){
-      //this.currentAngle=easeInOutQuad(millis(),this.startAngle,this.thetaAngle,this.duration);
-      //this.currentAngle=easeInOutSine(this.endAnimation-millis(),this.startAngle,this.thetaAngle,this.duration);
       this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
-
-
+     }else{
+      this.currentAngle=this.targetAngle;
      }
 
-     if(Math.abs( this.currentAngle-this.thetaAngle)>0.01)
-     {
-      //this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
-
-
-     }
-
-     //this.flutter();
-
-
-
-
-		//this.rotateTo(this.targetAngle,this.speed);
-      //  this.rotateTo(this.targetAngle,this.speed);
-
-
+    if(millis()<this.endAlphaAnimation){
+      this.currentAlpha=easeInOutQuad(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
+    }
+   
 
     strokeCap(SQUARE);
     push();
-          stroke(this.strokeColor);
-
-    if(fade) {
-      this.fadeTo(this.targetAlpha,0.09);
-      this.strokeColor.setAlpha(this.alpha);
       stroke(this.strokeColor);
-    }
+     // if(fade) {
+        //this.fadeTo(this.targetAlpha,0.09);
+        this.strokeColor.setAlpha(this.currentAlpha);
+        stroke(this.strokeColor);
+     // }
 
-    translate(this.x,this.y);
-		//rotate(h.heading());
-		//rotate(this.angle);
-    if(this.hasWind){
-    rotate(this.currentAngle);
-    this.flutter();
-    }
+      translate(this.x,this.y);
+      rotate(this.currentAngle);
+
+    //if(this.hasWind){
+        this.flutter();
+   // }
 
     if(center){
       line(-this.diameter/2,0,this.diameter/2,0);
     }else{
-      //line(0,0,this.diameter,0);
-
-
-     
-     // stroke(255,0,0);
-      //line(0,0,50,50);
       if(this.debug){
         stroke(this.strokeColor);
         strokeWeight(strokeWidth);
-        }
-
-            line(0,0,this.diameter,0);
-
-
-
-    //(p.heading());
-
-
-
+      }
+      line(0,0,this.diameter,0);
     }
-  //  image(pg,0,0);
-   // rect(-this.diameter/2,-this.diameter/2,5,5);
     pop();
 
 
-this.circleRot+=this.rotspeed;  
+    //debug target angle
+    /*
+    push()
+        translate(this.x,this.y);
 
+        stroke(255,0,0);
+        rotate(this.targetAngle);
+        line(0,0,this.diameter,0);
+      pop()
+*/
+    //flutter
+    this.circleRot+=this.rotspeed; 
+  
+  //      if(this.circleRot<this.rotMax) this.circleRot+=this.rotspeed; 
   }
   
 
@@ -696,9 +721,6 @@ this.circleRot+=this.rotspeed;
     this.y=y;
   }
 	
-	rotateTo(theta,speed){
-		 this.angle = lerp(this.angle, theta, speed);
-	}
 
 
   setColor(color){
@@ -706,12 +728,15 @@ this.circleRot+=this.rotspeed;
   }
 
   fadeTo(alpha,speed){
-         this.alpha = lerp(this.alpha, alpha, speed);
+    this.alpha = lerp(this.alpha, alpha, speed);
   }
 
   setAlpha(alpha){
     this.targetAlpha=alpha;
   }  
+
+
+
 
   startAnimation(duration){
     this.endAnimation=millis()+duration;
@@ -724,9 +749,35 @@ this.circleRot+=this.rotspeed;
     this.thetaAngle= this.targetAngle-this.startAngle;
     this.endAnimation=millis()+this.duration;
     this.startAnimation=millis();
-}
+    }
   }
 
+
+  setTargetAlpha(alpha){
+   if(alpha!=this.targetAlpha){
+      this.startAlpha=this.currentAlpha;
+      this.targetAlpha=alpha;
+      this.thetaAlpha= this.targetAlpha-this.startAlpha;
+      this.endAlphaAnimation=millis()+this.alphaDuration;
+      this.startAlphaAnimation=millis();
+      }
+  }  
+
+    setDuration(duration){
+    this.duration=duration;
+  }
+
+setAlphaDuration(duration){
+  this.alphaDuration=duration;
+}
+
+  resetCircleRot(){
+    this.circleRot=0;
+  }
+
+  setCircleRotMax(rotmax){
+    this.rotMax=rotmax;
+  }
 
   setAngle(angle){
     this.currentAngle=angle;
@@ -734,8 +785,12 @@ this.circleRot+=this.rotspeed;
   }
 
 
-  getAngle(){
+  getCurrentAngle(){
     return this.currentAngle;
+  }
+
+  getTargetAngle(){
+    return this.targetAngle;
   }
   
   setRotationInRad(angle){
@@ -746,9 +801,6 @@ this.circleRot+=this.rotspeed;
 
   }
 
-  setDuration(duration){
-    this.duration=duration;
-  }
 
 
   setFlutterParams(dis,rad,speed){
@@ -777,20 +829,35 @@ class Wind {
       this.x = iX;
       this.y =iY;
       this.radius = 0;
-      this.velocity=random(5,20);
+      this.velocity=random(10,20);
       this.maxRadius=2000;
       this.innerradius=rasterwidth;
       this.currentInnerRadius=0;
 
       this.deleteMe=false;
-      this.angle=random(10*PI);
-      this.duration=random(500,3000);
+      var rand=int(random(3,10));
+      if(rand%4==0)rand+=PI/2;
+      this.angle=rand*(PI/2)//random(-2*PI,2*PI/4);//random(2*PI);
+
+      if(winds.length>0){
+        var last_wind = winds[winds.length - 1];
+        this.angle=last_wind.angle+(rand*PI/2);//random(2*PI);
+      }
+
+      this.duration=map(rand,3,10,1000,3000);//random(500,3000);
+      
+      this.color=color(random(255),random(255),random(255),random(255));
+
+      this.flutterDistance=random(200,500);
+      this.flutterRadius=random(50,200);
+      this.flutterSpeed=random(0.1,0.5);
+      this.rotMax=random(5*PI);//*int(random(5));
+
   }
 
   move(){
     this.radius+=this.velocity;
     if(this.radius>this.maxRadius)this.deleteMe=true;
-
     this.currentInnerRadius=this.radius-this.innerradius;
     if(this.currentInnerRadius<0)this.currentInnerRadius=0;
   }
@@ -801,9 +868,8 @@ class Wind {
     stroke(255,0,0,50);
     noFill();
     translate(this.x,this.y);
-    ellipse(0,0, this.radius*2,this.radius*2);
-    ellipse(0,0, this.currentInnerRadius*2,this.currentInnerRadius*2);
-
+    //ellipse(0,0, this.radius*2,this.radius*2);
+    //ellipse(0,0, this.currentInnerRadius*2,this.currentInnerRadius*2);
     pop();
   }
 
@@ -822,16 +888,6 @@ function check_a_point(a, b, x, y, r) {
     }
     return false;
 }
-
-function check_a_pointInner(a, b, x, y, r) {
-    var dist_points = (a - x) * (a - x) + (b - y) * (b - y);
-    r *= r;
-    if (dist_points < r ) {
-        return true;
-    }
-    return false;
-}
-
 
 
 // dynamically adjust the canvas to the window
