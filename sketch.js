@@ -20,6 +20,11 @@ var rasterwidthBefore=rasterwidth;
 
 var weight=10;
 
+var alphaTraceMin=0;
+var alphaTraceMax=255;
+var alphaTrace=100;
+
+
 
 // gui params
 var strokeWidth = 3;
@@ -92,6 +97,12 @@ var numVanes;
 let pg;
 
 var winds=[];
+let latestAngle=0;
+
+
+// Buffer
+let buffer;
+var isOffscreen=true ;
 
 
 
@@ -101,7 +112,6 @@ function preload() {
     img3 = loadImage('assets/3.png');
     img4 = loadImage('assets/4.png');
     img5 = loadImage('assets/5.png');
-
 }
 
 
@@ -115,12 +125,14 @@ function setup() {
 
   //createCanvas(710, 400);
     createCanvas(windowWidth, windowHeight);
-    frameRate(30);
+    buffer = createGraphics(windowWidth, windowHeight);
+
+    frameRate(60);
 
   // Create Layout GUI
   gui = createGui('P5 GUI');
   //gui.addGlobals( 'images','globalStrokeColor', 'rasterwidth','strokeWidth','fade','center','inverted','durationBlack','durationAlpha','durationDilitation','intervall','howMuchRows');
-  gui.addGlobals( 'rasterwidth','strokeWidth','center');
+  gui.addGlobals( 'rasterwidth','strokeWidth','center','fade','alphaTrace','isOffscreen','inverted');
 
 
   img1.loadPixels();
@@ -172,8 +184,6 @@ function createVanes(){
   pg.noFill();
   pg.stroke(255,0,0);
   pg.line(-rasterwidth/2,0,rasterwidth/2,0);
-
-
 }
 
 function draw() {
@@ -204,7 +214,7 @@ function draw() {
       createVanes();
   }
 
-
+/*
 //var intervall=1;
   if(waveIsRunning){
    if(millis()>intervall+startWaveMillis){
@@ -224,12 +234,13 @@ if(zerowaveIsRunning){
     }
   }
 
-
+*/
 
 
 //flutterWave();
 
   background(255);
+  buffer.background(255,alphaTrace);
 
   winds.map((wind,i) =>{
     wind.move();
@@ -241,26 +252,31 @@ if(zerowaveIsRunning){
   })
 
   push();
- //translate(-windowWidth/2,-windowHeight/2);
 
 
-    strokeWeight(strokeWidth);
-    noStroke();
-    //colorMode(RGB);
+   // strokeWeight(strokeWidth);
 
-    //if(!fade)stroke(globalStrokeColor);
-     //if(!fade)stroke(globalStrokeColor);
+
+
+
+   // noStroke();
+  
+
+      buffer.strokeWeight(strokeWidth);
+    
 
 
      vanes.map(vane =>{
-          let alph=getAlphaVal(vane.x , vane.y,actualImage);
-            vane.hasWind=false;
+        let alph=getAlphaVal(vane.x , vane.y,actualImage);
+        vane.hasWind=false;
 
-          if(alph>5){
+         // if(alph>5){
            // vane.setTargetAlpha(255);
-          }
-     // vane.setColor(color(globalStrokeColor));
-      winds.map((wind,i) =>{
+          //}
+
+        buffer.stroke(vane.getStrokecolor());
+        
+        winds.map((wind,i) =>{
 
         let outer=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.radius);
         let inner=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.currentInnerRadius);
@@ -272,11 +288,6 @@ if(zerowaveIsRunning){
           vane.setDuration(duration);
           vane.setTargetAngle(angle); 
 
-          /*if(random()<0.3){
-            angle+=20*PI;
-            duration*=5;
-            console.log(angle,duration)
-          }*/
           vane.setColor(wind.color);
           if(alph>5){
             vane.setDuration(duration+500);
@@ -285,8 +296,11 @@ if(zerowaveIsRunning){
             vane.setTargetAlpha(255);
             vane.setFlutterParams(500,50,0.5)
           }else{
-            vane.setAlphaDuration(duration-500);
+            //vane.setAlphaDuration(duration-500);
+            vane.setAlphaDuration(duration+500);
+
             vane.setTargetAlpha(160);
+            if(fade)vane.setTargetAlpha(0);
             vane.setFlutterParams(500,100,0.09)
 
           }
@@ -296,12 +310,73 @@ if(zerowaveIsRunning){
           //vane.resetCircleRot();
           //vane.setCircleRotMax(vane.rotMax+wind.rotMax);
           //vane.setFlutterParams(wind.flutterDistance,wind.flutterRadius,wind.flutterSpeed);
-         // vane.setColor(wind.color);
+         //vane.setColor(wind.color);
           //console.log(wind.angle)
         };
       })
-      vane.display();
+
+      vane.update();
+      
+
+      if(isOffscreen){
+          //buffer.push();
+       
+
+            if(fade) {
+              vane.fadeTo(vane.targetAlpha,0.09);
+              vane.strokeColor.setAlpha(vane.currentAlpha);
+              buffer.stroke(vane.strokeColor);
+            }
+
+           // buffer.translate(vane.x,vane.y);
+           //buffer.rotate(vane.getCurrentAngle());
+
+          //if(this.hasWind){
+             // buffer.rotate(vane.flutter());
+
+         // }
+
+          if(center){
+            buffer.line(-vane.diameter/2,0,vane.diameter/2,0);
+          }else{
+            if(vane.debug){
+              buffer.stroke(vane.strokeColor);
+              buffer.strokeWeight(strokeWidth);
+            }
+            //PVector(this.x,this.y);
+            
+            let pos = createVector(vane.x,vane.y);
+            let diff=createVector(vane.diameter,0);
+            diff.rotate(vane.getCurrentAngle());
+            let pos2=pos.add(diff);
+            //pos2.rotate(vane.getCurrentAngle());
+            //buffer.beginShape(POINTS);
+            buffer.line(vane.x,vane.y,pos2.x,pos2.y);
+              //buffer.rect(vane.x,vane.y,pos2.x-vane.x,pos2.y-vane.y);
+                  //buffer.line(vane.x,vane.y,pos2.x,pos2.y);
+            //buffer.ellipse(pos2.x,pos2.y,10,10);
+          //  buffer.rect(pos.x,pos.y,pos2.x-pos.x,pos2.y-pos.y);
+
+           // buffer.image(pg,0,0);
+           //buffer.beginShape(LINES);
+              //buffer.vertex(vane.x,vane.y);
+              //buffer.vertex(pos2.x,pos2.y);
+          //buffer.endShape();
+
+          }
+        // buffer.pop();
+
+      }else{
+  
+          vane.display();
+
+      }
+
+      vane.hasDisplayed();
+
      })
+
+//buffer.endShape();
 
     //for (var i = 0; i < numVanes; i++) {
       //let loc = (vanes[i].x + vanes[i].y * img.width) * 4;
@@ -328,6 +403,9 @@ if(zerowaveIsRunning){
     //}
     pop();
 
+
+   if(isOffscreen)image(buffer,0,0);
+
       theta-=0.2;
       rasterwidthBefore=rasterwidth;
 
@@ -335,6 +413,7 @@ if(zerowaveIsRunning){
         fill(255,0,0);
         noStroke();
         text("FPS: " + fps.toFixed(2), 10, windowHeight - 10);
+
 
 }
 
@@ -656,13 +735,10 @@ class WindVane {
 
 
 
-  display() {
-
-    if(millis()<this.endAnimation){
+update(){
+  if(millis()<this.endAnimation){
       //this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
       this.currentAngle=easeInOutSine(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
-
-      
      }else{
       this.currentAngle=this.targetAngle;
      }
@@ -671,17 +747,28 @@ class WindVane {
      // this.currentAlpha=easeInOutQuad(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
       this.currentAlpha=easeInOutSine(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
 
+    }else{
+    // this.currentAlpha=this.targetAlpha;
     }
-   
 
-    strokeCap(SQUARE);
-    push();
+}
+
+  display() {
+
+  
+
+    //strokeCap(SQUARE);
+if(isOffscreen){
+  
+
+}else{
+      push();
       stroke(this.strokeColor);
-     // if(fade) {
-        //this.fadeTo(this.targetAlpha,0.09);
+      if(fade) {
+        this.fadeTo(this.targetAlpha,0.09);
         this.strokeColor.setAlpha(this.currentAlpha);
         stroke(this.strokeColor);
-     // }
+      }
 
       translate(this.x,this.y);
       rotate(this.currentAngle);
@@ -697,10 +784,13 @@ class WindVane {
         stroke(this.strokeColor);
         strokeWeight(strokeWidth);
       }
+
+          
+
       line(0,0,this.diameter,0);
     }
     pop();
-
+}
 
     //debug target angle
     /*
@@ -713,11 +803,20 @@ class WindVane {
       pop()
 */
     //flutter
-    this.circleRot+=this.rotspeed; 
   
   //      if(this.circleRot<this.rotMax) this.circleRot+=this.rotspeed; 
   }
-  
+
+hasDisplayed(){
+    this.circleRot+=this.rotspeed; 
+
+
+  }
+
+
+
+
+
 
   flutter(){
     let c=createVector(this.circleDistance,0);
@@ -733,6 +832,7 @@ class WindVane {
         line(0,0,p.x,p.y);
       }
       rotate(p.heading());
+      //return p.heading();
   }
 
 
@@ -810,6 +910,14 @@ setAlphaDuration(duration){
     return this.currentAngle;
   }
 
+  getCurrentAlpha(){
+    return this.currentAlpha;
+  }
+
+  getPosition(){
+    return new PVector(this.x,this.y);
+  }
+
   getTargetAngle(){
     return this.targetAngle;
   }
@@ -840,37 +948,35 @@ setAlphaDuration(duration){
     return this.rotspeed;
   }
 
+   getStrokecolor(){
+  return this.strokeColor;
+ }
+
 
 }
 
 
 
 class Wind {
-  constructor(iX,iY) {
+  constructor(iX,iY,isMasked) {
       this.x = iX;
       this.y =iY;
       this.radius = 0;
       this.velocity=random(10,20);
-      this.maxRadius=2000;
+      this.maxRadius=2500;
       this.innerradius=rasterwidth;
       this.currentInnerRadius=0;
-
+      this.isMasked=isMasked;
       this.deleteMe=false;
-      var rand=int(random(3,10));
+      //var rand=int(random(3,10));
+            var rand=int(random(3,5));
+
       if(rand%4==0)rand+=PI/2;
-      this.angle=rand*(PI/2)//random(-2*PI,2*PI/4);//random(2*PI);
-
-      if(winds.length>0){
-        var last_wind = winds[winds.length - 1];
-        this.angle=last_wind.angle+(rand*PI/2);//random(2*PI);
-      }
-
-      this.duration=map(rand,3,10,1000,3000);//random(500,3000);
-      
-
+      this.angle=latestAngle+(rand*PI/2);//random(2*PI);
+      latestAngle=this.angle;
+      this.duration=map(rand,3,5,1000,2000);//random(500,3000);
       var rn=floor(random(0,colors.length-0.9));
       this.color=color(colors[rn]);
-
       this.flutterDistance=random(200,500);
       this.flutterRadius=random(50,200);
       this.flutterSpeed=random(0.1,0.5);

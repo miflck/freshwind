@@ -4,24 +4,120 @@
 		"selected_items":
 		[
 			[
+				"setAl",
+				"setAlphaDuration"
+			],
+			[
+				"the",
+				"thetaAlpha"
+			],
+			[
+				"startA",
+				"startAlphaAnimation"
+			],
+			[
+				"alph",
+				"alphaDuration"
+			],
+			[
+				"al",
+				"alphaDuration"
+			],
+			[
+				"image",
+				"actualImageIndex"
+			],
+			[
+				"ig",
+				"img1"
+			],
+			[
+				"targetA",
+				"targetAlpha"
+			],
+			[
+				"curr",
+				"currentAlpha"
+			],
+			[
+				"setA",
+				"setAlpha"
+			],
+			[
+				"rot",
+				"rotMax"
+			],
+			[
+				"set",
+				"setCircleRotMax"
+			],
+			[
+				"cir",
+				"circleRot"
+			],
+			[
+				"ci",
+				"circleRot"
+			],
+			[
+				"theta",
+				"thetaAngle"
+			],
+			[
+				"fl",
+				"flutterSpeed"
+			],
+			[
+				"inner",
+				"innerradius"
+			],
+			[
+				"th",
+				"this"
+			],
+			[
+				"current",
+				"currentInnerRadius"
+			],
+			[
+				"rotate",
+				"rotateTo"
+			],
+			[
+				"cons",
+				"console"
+			],
+			[
+				"str",
+				"strokeColor"
+			],
+			[
+				"dis",
+				"display"
+			],
+			[
+				"tran",
+				"translate"
+			],
+			[
+				"rad",
+				"radius"
+			],
+			[
+				"flu",
+				"flutterFact"
+			],
+			[
+				"flutter",
+				"flutterFact"
+			],
+			[
 				"t",
 				"true"
 			],
 			[
-				"ci",
-				"circleRadius"
-			],
-			[
-				"cir",
-				"circleDistance"
-			],
-			[
 				"circle",
 				"circleRadius"
-			],
-			[
-				"set",
-				"setAngle"
 			],
 			[
 				"tht",
@@ -106,10 +202,6 @@
 			[
 				"ap",
 				"alpha"
-			],
-			[
-				"current",
-				"currentSlide"
 			],
 			[
 				"startEm",
@@ -212,10 +304,6 @@
 				"foreach\tforeach …"
 			],
 			[
-				"str",
-				"string"
-			],
-			[
 				"ba",
 				"background-color: "
 			],
@@ -316,14 +404,15 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/fgm4/htdocs_Mamp/freshWind"
+		"/Users/fgm4/htdocs_Mamp/freshWind",
+		"/Users/fgm4/htdocs_Mamp/freshWind/assets"
 	],
 	"file_history":
 	[
+		"/Users/fgm4/htdocs_Mamp/freshWind/sketch.js",
 		"/Users/fgm4/htdocs_Mamp/freshWind/index.html",
 		"/Users/fgm4/htdocs_Mamp/freshWind/helper.js",
 		"/Users/fgm4/htdocs_Mamp/freshWind/sftp-config.json",
-		"/Users/fgm4/htdocs_Mamp/freshWind/sketch.js",
 		"/Users/fgm4/Repos/typoclubTalk/index.html",
 		"/Users/fgm4/Repos/typoclubTalk/notizen.rtf",
 		"/Users/fgm4/Repos/typoclubTalk/css/addons.css",
@@ -466,6 +555,47 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"strokeWidth",
+			"colorM",
+			"colors",
+			"color",
+			"strokeco",
+			"durationDilitation",
+			"actualImage",
+			"actualImageIndex",
+			"images",
+			"actualImage",
+			"images",
+			"img1",
+			"targetAlpha",
+			"alpha",
+			"fade",
+			"setAlpha",
+			"flutterSpeed",
+			"rotMax",
+			"setTargetAngle",
+			"setRotationInRad",
+			"startAnimation",
+			"console.log",
+			"targetAngle",
+			"getTargetAngle",
+			"flutterwave",
+			"setFlutterParams",
+			"setColor",
+			"currentInnerRadius",
+			"checka",
+			"setColor",
+			"setTargetAngle",
+			"setDuration",
+			"mouse",
+			"getDeleteMe",
+			"vanes",
+			"    strokeWeight(strokeWidth);\n",
+			"strokeWe",
+			"debug",
+			"flutterWave",
+			"circleRot",
+			"waveNum",
 			"center",
 			"setAngle",
 			"mouse",
