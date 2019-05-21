@@ -4,4 +4,17 @@ html, body {
 }
 canvas {
   display: block;
+  position:absolute;
+  z-index: 2;
+  mix-blend-mode: multiply;
+}
+#content{
+	display: block;
+	position: absolute;
+	left:50%;
+	top:20%;
+	border:solid thin red;
+	z-index: 1;
+	width: 500px;
+	height: 500px;
 }
