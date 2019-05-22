@@ -119,7 +119,7 @@ function preload() {
     img1 = loadImage('assets/1.png');
     img2 = loadImage('assets/2.png');
     img3 = loadImage('assets/3.png');
-    img4 = loadImage('assets/4.png');
+    img4 = loadImage('assets/4_2.png');
     img5 = loadImage('assets/5.png');
 }
 
@@ -283,8 +283,10 @@ if(zerowaveIsRunning){
      vanes.map(vane =>{
         let alph=getAlphaVal(vane.x , vane.y,actualImage);
 
-          if(alph>5){
+          if(alph>5 ){
             vane.isOnMask=true;
+          }else{
+            vane.isOnMask=false;
           }
 
         buffer.stroke(vane.getStrokecolor());
@@ -302,6 +304,7 @@ if(zerowaveIsRunning){
           var duration=wind.duration
           vane.setDuration(duration);
           vane.setTargetAngle(angle); 
+          vane.setEasingType(wind.easingType);
 
           vane.setColor(wind.color);
           if(wind.isMasked){
@@ -521,6 +524,37 @@ function mousePressed(event) {
     }*/
 }
 
+
+function makeWaveWithZero(){
+    //winds.push(new Wind(mouseX,mouseY,true));
+
+    var vel =800;//random(50,70);
+    var col=floor(random(0,colors.length-0.9));
+    var ang=int(random(3,5));
+    if(ang%4==0)ang+=PI/2;
+    var dur=map(ang,3,5,500,600);//random(500,3000);
+    var wait=dur;
+
+    winds.push(new WindWidthParameters(mouseX,mouseY,vel,ang,dur,0,'easeInQuad',col,false));
+    winds.push(new WindWidthParameters(mouseX,mouseY,vel,ang,dur,wait,'easeOutQuad',col,true));
+
+
+}
+
+
+function makeWave(){
+    //winds.push(new Wind(mouseX,mouseY,true));
+
+    var vel =30;//random(10,20);
+    var col=floor(random(0,colors.length-0.9));
+    var ang=int(random(3,5));
+    if(ang%4==0)ang+=PI/2;
+    var dur=map(ang,3,5,500,1000);//random(500,3000);
+    var wait=dur;
+    winds.push(new WindWidthParameters(mouseX,mouseY,vel,ang,dur,0,'easeInQuad',col,true));
+}
+
+
 function keyPressed(event){
   if(event.key=='x'){
     actualImageIndex++;
@@ -528,9 +562,20 @@ function keyPressed(event){
   }
 
 
-  if(event.key=='w'){
-    winds.push(new Wind(mouseX,mouseY,true));
+  if(event.key=='W'){
+
+      makeWaveWithZero();
+
   }
+
+
+
+
+  if(event.key=='w'){
+    //winds.push(new Wind(mouseX,mouseY,true));
+    makeWave();
+  }
+
 
     if(event.key=='z'){
     winds.push(new Wind(mouseX,mouseY,false));
@@ -547,6 +592,13 @@ function keyPressed(event){
   }
 
 }
+
+function touchEnded() {
+      makeWaveWithZero();
+}
+
+
+
 
 
 function calcVec(x, y) {
@@ -565,7 +617,6 @@ class WindVane {
     this.diameter = rasterwidth;
 
     this.position=new p5.Vector(this.x, this.y);
-		//this.angle=-PI/4;
 
     this.strokeColor=color(0,100,200);
     this.alpha=255;
@@ -605,6 +656,7 @@ class WindVane {
     this.debug=false;
     this.hasWind=false;
     this.isOnMask=false;
+    this.easingType='easeInOutSine';
 
 
 //  if(iY<height/2)this.rotspeed = map(iY,0,height/2,0.1,0.4);
@@ -624,7 +676,24 @@ class WindVane {
 update(){
   if(millis()<this.endAnimation){
       //this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+      //this.currentAngle=easeInOutSine(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+
+switch (this.easingType) {
+  case 'easeInOutSine':
       this.currentAngle=easeInOutSine(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+    break;
+
+    case 'easeInQuad':
+      this.currentAngle=easeInQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+    break;
+
+    case 'easeOutQuad':
+      this.currentAngle=easeOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+    break;
+
+}
+
+      
      }else{
       this.currentAngle=this.targetAngle;
      }
@@ -632,6 +701,23 @@ update(){
     if(millis()<this.endAlphaAnimation){
      // this.currentAlpha=easeInOutQuad(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
       this.currentAlpha=easeInOutSine(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
+
+     /* switch (this.easingType) {
+        case 'easeInOutSine':
+      this.currentAlpha=easeInOutSine(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
+          break;
+
+          case 'easeInQuad':
+      this.currentAlpha=easeInQuad(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
+          break;
+
+          case 'easeOutQuad':
+      this.currentAlpha=easeInQuad(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
+          break;
+
+      }*/
+
+
 
     }else{
     // this.currentAlpha=this.targetAlpha;
@@ -721,6 +807,11 @@ hasDisplayed(){
       return p.heading();
   }
 
+
+
+setEasingType(easingType){
+  this.easingType=easingType;
+}
 
   setPosition(x,y){
     this.position=new p5.Vector(x, y);
@@ -855,7 +946,7 @@ class Wind {
       this.isMasked=isMasked;
       this.deleteMe=false;
       //var rand=int(random(3,10));
-            var rand=int(random(3,5));
+      var rand=int(random(3,5));
 
       if(rand%4==0)rand+=PI/2;
       this.angle=latestAngle+(rand*PI/2);//random(2*PI);
@@ -867,6 +958,8 @@ class Wind {
       this.flutterRadius=random(50,200);
       this.flutterSpeed=random(0.1,0.5);
       this.rotMax=random(5*PI);//*int(random(5));
+            this.easingType='easeInOutSine';
+
 
   }
 
@@ -875,6 +968,54 @@ class Wind {
     if(this.radius>this.maxRadius)this.deleteMe=true;
     this.currentInnerRadius=this.radius-this.innerradius;
     if(this.currentInnerRadius<0)this.currentInnerRadius=0;
+  }
+
+  display(){
+    push();
+    strokeWeight(1);
+    stroke(255,0,0,50);
+    noFill();
+    translate(this.x,this.y);
+    //ellipse(0,0, this.radius*2,this.radius*2);
+    //ellipse(0,0, this.currentInnerRadius*2,this.currentInnerRadius*2);
+    pop();
+  }
+
+  getDeleteMe(){
+    return this.deleteMe;
+  }
+
+}
+
+class WindWidthParameters {
+  constructor(iX,iY,velocity,angle,dur,wait,easingType,col,isMasked) {
+      this.x = iX;
+      this.y =iY;
+      this.radius = 0;
+      this.velocity=velocity;
+      this.maxRadius=2500;
+      this.innerradius=rasterwidth;
+      this.currentInnerRadius=0;
+      this.isMasked=isMasked;
+      this.deleteMe=false;
+
+      this.angle=latestAngle+(angle*PI/2);//random(2*PI);
+      latestAngle=this.angle;
+      this.duration=dur;//random(500,3000);
+      this.color=color(colors[col]);
+      this.initTime=millis();
+      this.wait=wait;
+      this.easingType=easingType;
+
+  }
+
+  move(){
+    if(millis()>this.initTime+this.wait){
+      this.radius+=this.velocity;
+      if(this.radius>this.maxRadius)this.deleteMe=true;
+      this.currentInnerRadius=this.radius-this.innerradius;
+      if(this.currentInnerRadius<0)this.currentInnerRadius=0;
+    }
   }
 
   display(){

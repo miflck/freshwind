@@ -4,6 +4,34 @@
 		"selected_items":
 		[
 			[
+				"vel",
+				"velocity"
+			],
+			[
+				"w",
+				"width\tproperty"
+			],
+			[
+				"z",
+				"z-index\tproperty"
+			],
+			[
+				"is",
+				"isOffscreen"
+			],
+			[
+				"ta",
+				"targetAlpha"
+			],
+			[
+				"getC",
+				"getCurrentAngle"
+			],
+			[
+				"has",
+				"hasDisplayed"
+			],
+			[
 				"setAl",
 				"setAlphaDuration"
 			],
@@ -409,10 +437,12 @@
 	],
 	"file_history":
 	[
-		"/Users/fgm4/htdocs_Mamp/freshWind/sketch.js",
+		"/Users/fgm4/htdocs_Mamp/freshWind/style.css",
 		"/Users/fgm4/htdocs_Mamp/freshWind/index.html",
 		"/Users/fgm4/htdocs_Mamp/freshWind/helper.js",
 		"/Users/fgm4/htdocs_Mamp/freshWind/sftp-config.json",
+		"/Users/fgm4/htdocs_Mamp/freshWind/sketch.js",
+		"/Users/fgm4/htdocs_Mamp/freshWind/p5.dom.min.js",
 		"/Users/fgm4/Repos/typoclubTalk/index.html",
 		"/Users/fgm4/Repos/typoclubTalk/notizen.rtf",
 		"/Users/fgm4/Repos/typoclubTalk/css/addons.css",
@@ -534,9 +564,7 @@
 		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/media/js/isotope.min.js",
 		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/modules/sigi_core/sigi-media/styles/less/sigi.less",
 		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/modules/sigi_core/classes/Backend/Actionbox.php",
-		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/modules/sigi_core/views/backend/medialink/container.php",
-		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/application/classes/controller/backend/backend.php",
-		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/application/views/templates/contents/collection_ex_by_type/viewfrontend.php"
+		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/modules/sigi_core/views/backend/medialink/container.php"
 	],
 	"find":
 	{
@@ -555,6 +583,54 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"getAlphaVal",
+			"WindWidthParameters",
+			"flutterSpeed",
+			"rotMax",
+			"gui",
+			"inverted",
+			"alphaTrace",
+			"isOnMask",
+			"isMasked",
+			"alph",
+			"strokeWidth",
+			"flutter",
+			"// ",
+			"flutter",
+			"off",
+			"inverted",
+			"strokeCap",
+			"winds",
+			"alph",
+			"PVector",
+			"new PVector",
+			"new PVector(this.x,this.y);",
+			"PVec",
+			"PVector",
+			"pve",
+			"vector",
+			"framerate",
+			"flutter",
+			"circleDistance",
+			"circleRot",
+			"flutter",
+			"isOffscreen",
+			"center",
+			"alphatrace",
+			"alphatra",
+			"alpha",
+			"flutterSpeed",
+			"winds",
+			"duration",
+			"targetAlpha",
+			"fade",
+			"mouse",
+			"strokeWidth",
+			"isOffscreen",
+			"pg",
+			"Buffer",
+			"pg",
+			"getCurrentAngle",
 			"strokeWidth",
 			"colorM",
 			"colors",
@@ -634,27 +710,7 @@
 			"this.angle",
 			"wave",
 			"waveAngleFactor",
-			"getAlphaVal",
-			"image.get",
-			"fillc",
-			"img",
-			"resolution",
-			"setAlpha",
-			"fade",
-			"wave(",
-			"wave",
-			"resolution",
-			"transparency",
-			"createVanes",
-			"resizeCanvas",
-			"strokeca",
-			"speed",
-			"Gui",
-			"speed",
-			"weight",
-			"resolution",
-			"20",
-			"rotateTo"
+			"getAlphaVal"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -731,7 +787,7 @@
 		[
 			[
 				"",
-				"scss/app.scss"
+				"p5.dom.min.js"
 			]
 		],
 		"width": 0.0
