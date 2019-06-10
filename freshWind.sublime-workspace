@@ -4,6 +4,46 @@
 		"selected_items":
 		[
 			[
+				"wi",
+				"windowWidth"
+			],
+			[
+				"e",
+				"ellipse"
+			],
+			[
+				"crop",
+				"cropPos"
+			],
+			[
+				"creat",
+				"createVector"
+			],
+			[
+				"r",
+				"rotspeed"
+			],
+			[
+				"lo",
+				"log"
+			],
+			[
+				"rot",
+				"rotspeed"
+			],
+			[
+				"crea",
+				"createVector"
+			],
+			[
+				"cir",
+				"circleRadius"
+			],
+			[
+				"ra",
+				"radius"
+			],
+			[
 				"vel",
 				"velocity"
 			],
@@ -72,16 +112,8 @@
 				"setAlpha"
 			],
 			[
-				"rot",
-				"rotMax"
-			],
-			[
 				"set",
 				"setCircleRotMax"
-			],
-			[
-				"cir",
-				"circleRot"
 			],
 			[
 				"ci",
@@ -150,10 +182,6 @@
 			[
 				"tht",
 				"thetaAngle"
-			],
-			[
-				"ra",
-				"random"
 			],
 			[
 				"wave",
@@ -372,10 +400,6 @@
 				"Mesh"
 			],
 			[
-				"r",
-				"random"
-			],
-			[
 				"joint",
 				"jointpos"
 			],
@@ -437,11 +461,11 @@
 	],
 	"file_history":
 	[
-		"/Users/fgm4/htdocs_Mamp/freshWind/style.css",
-		"/Users/fgm4/htdocs_Mamp/freshWind/index.html",
-		"/Users/fgm4/htdocs_Mamp/freshWind/helper.js",
 		"/Users/fgm4/htdocs_Mamp/freshWind/sftp-config.json",
 		"/Users/fgm4/htdocs_Mamp/freshWind/sketch.js",
+		"/Users/fgm4/htdocs_Mamp/freshWind/index.html",
+		"/Users/fgm4/htdocs_Mamp/freshWind/style.css",
+		"/Users/fgm4/htdocs_Mamp/freshWind/helper.js",
 		"/Users/fgm4/htdocs_Mamp/freshWind/p5.dom.min.js",
 		"/Users/fgm4/Repos/typoclubTalk/index.html",
 		"/Users/fgm4/Repos/typoclubTalk/notizen.rtf",
@@ -583,6 +607,25 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"WindWidthParameters",
+			"WindObjectWithParameters",
+			"color",
+			"makeWaveWithZero",
+			"setActive",
+			"WindObjectWithParameters",
+			"setActive",
+			"WindWidthParameters",
+			"cropPos",
+			"cropSine",
+			"cropPos",
+			"this.circleRot",
+			"flutter",
+			"setActiveDebug",
+			"winds",
+			"vector",
+			"makeWaveWithZero",
+			"WindWidthParameters",
+			"currentInnerRadius",
 			"getAlphaVal",
 			"WindWidthParameters",
 			"flutterSpeed",
@@ -691,26 +734,7 @@
 			"aveIsRunning",
 			"zeroWaveIsRunning",
 			"waveIsRunn",
-			"waveIsRunning",
-			"waveAngleFactor",
-			"intervall",
-			"startWave",
-			"getAlphaVal",
-			"fact",
-			"scale",
-			";\n",
-			"setAlpha",
-			"targetAlpha",
-			"fade",
-			"getAlpha",
-			"getAlphaVal",
-			"targetAngle",
-			"endAnimation",
-			"targetAngle",
-			"this.angle",
-			"wave",
-			"waveAngleFactor",
-			"getAlphaVal"
+			"waveIsRunning"
 		],
 		"highlight": false,
 		"in_selection": false,

@@ -106,6 +106,8 @@ var numVanes;
 let pg;
 
 var winds=[];
+var windObjects=[];
+
 let latestAngle=0;
 
 
@@ -265,17 +267,9 @@ if(zerowaveIsRunning){
   })
 
   push();
-
-
-    strokeWeight(strokeWidth);
-
-
-
-
+  strokeWeight(strokeWidth);
    // noStroke();
-  
-
-      buffer.strokeWeight(strokeWidth);
+  buffer.strokeWeight(strokeWidth);
 
     
 // stroke(255,0,0);
@@ -294,47 +288,23 @@ if(zerowaveIsRunning){
 
         
         winds.map((wind,i) =>{
+          if (wind.windobject==true){
+              let outer=check_a_point(vane.x,vane.y,wind.pos.x,wind.pos.y,wind.radius);
 
-        let outer=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.radius);
-        let inner=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.currentInnerRadius);
-       
-       if(outer &! inner){
+              if(outer){
+                setActiveDebug(vane,wind);
+              }
 
-          var angle=wind.angle
-          var duration=wind.duration
-          vane.setDuration(duration);
-          vane.setTargetAngle(angle); 
-          vane.setEasingType(wind.easingType);
-
-          vane.setColor(wind.color);
-          if(wind.isMasked){
-            if(vane.isOnMask){
-              vane.setDuration(duration+500);
-              vane.setTargetAngle(angle+PI/4); 
-              vane.setAlphaDuration(duration-500);
-              vane.setTargetAlpha(255);
-              vane.setFlutterParams(500,50,0.5)
-            }else{
-              vane.setAlphaDuration(duration-500);
-              //vane.setAlphaDuration(duration+500);
-              vane.setTargetAlpha(unmaskedAlpha);
-              if(fade)vane.setTargetAlpha(0);
-              vane.setFlutterParams(500,100,0.05)
-            }
           }else{
-              vane.setTargetAlpha(255);
-
-
-          }
-
-       
-      
-          //vane.resetCircleRot();
-          //vane.setCircleRotMax(vane.rotMax+wind.rotMax);
-          //vane.setFlutterParams(wind.flutterDistance,wind.flutterRadius,wind.flutterSpeed);
-         //vane.setColor(wind.color);
-          //console.log(wind.angle)
-        };
+            let outer=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.radius);
+            let inner=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.currentInnerRadius);
+           
+           // Circles
+           if(outer &! inner){
+             setActive(vane,wind);
+            };
+            // Circles End
+        }
       })
 
       vane.update();
@@ -382,6 +352,33 @@ if(zerowaveIsRunning){
            // }
              // else{
               buffer.line(vane.x,vane.y,pos2.x,pos2.y);
+
+
+            let npos = createVector(vane.x,vane.y);
+            let ndiff=createVector(vane.diameter-5,0);
+            ndiff.rotate(vane.getCurrentAngle());
+            let npos2=npos.copy();//.add(diff);
+            npos2.add(ndiff);
+           let vec=npos2.copy();
+           vec.sub(npos);
+
+           // vane.cropPos=map(sin(this.cropSine),-1,1,0,this.diameter);
+           vec.normalize();
+            vec.mult(vane.cropPos);
+
+              //  buffer.ellipse(npos.x,npos.y,10,10);
+               // buffer.stroke(255,0,0);
+               // buffer.ellipse(npos.x,npos.y,5,5);
+               // buffer.stroke(0,255,0);
+               // buffer.ellipse(npos2.x,npos2.y,5,5);
+
+             //   buffer.stroke(0,0,255);
+            //    buffer.ellipse(vane.x+vec.x,vane.y+vec.y,5,5);
+                               // buffer.ellipse(npos2.x,npos2.y+vec.y,5,5);
+
+
+               // buffer.ellipse(npos2.x,npos2.y,10,10);
+
              // }
               //buffer.rect(vane.x,vane.y,pos2.x-vane.x,pos2.y-vane.y);
                   //buffer.line(vane.x,vane.y,pos2.x,pos2.y);
@@ -451,6 +448,63 @@ if(zerowaveIsRunning){
         text("FPS: " + fps.toFixed(2), 10, windowHeight - 10);
 
 
+}
+
+
+function setActive(vane,wind){
+   var angle=wind.angle
+              var duration=wind.duration
+              vane.setDuration(duration);
+              vane.setTargetAngle(angle); 
+              vane.setEasingType(wind.easingType);
+
+              vane.setColor(wind.color);
+              if(wind.isMasked){
+                if(vane.isOnMask){
+                  vane.setDuration(duration+500);
+                  vane.setTargetAngle(angle+PI/4); 
+                  vane.setAlphaDuration(duration-500);
+                  vane.setTargetAlpha(255);
+                  vane.setFlutterParams(500,50,0.5)
+                }else{
+                  vane.setAlphaDuration(duration-500);
+                  //vane.setAlphaDuration(duration+500);
+                  vane.setTargetAlpha(unmaskedAlpha);
+                  if(fade)vane.setTargetAlpha(0);
+                  vane.setFlutterParams(500,100,0.05)
+                }
+              }else{
+                  vane.setTargetAlpha(255);
+              }
+}
+
+
+function setActiveDebug(vane,wind){
+   var angle=wind.angle
+              var duration=wind.duration
+              vane.setDuration(duration);
+              //vane.setTargetAngle(angle); 
+              vane.setEasingType(wind.easingType);
+              vane.setColor(wind.color);
+
+              if(wind.isMasked){
+                if(vane.isOnMask){
+                  vane.setDuration(duration+500);
+                  vane.setTargetAngle(angle+PI/4); 
+                  vane.setAlphaDuration(duration-500);
+                  vane.setTargetAlpha(255);
+                  vane.setFlutterParams(500,50,0.5)
+                }else{
+                  vane.setAlphaDuration(duration-500);
+                  vane.setTargetAngle(angle); 
+                  vane.setTargetAlpha(unmaskedAlpha);
+                  if(fade)vane.setTargetAlpha(0);
+                  vane.setFlutterParams(500,100,0.05)
+                }
+              }else{
+                  vane.setTargetAlpha(255);
+                  vane.setTargetAngle(angle); 
+              }
 }
 
 
@@ -528,11 +582,13 @@ function mousePressed(event) {
 function makeWaveWithZero(){
     //winds.push(new Wind(mouseX,mouseY,true));
 
-    var vel =800;//random(50,70);
+    var vel =20;//random(50,70);
     var col=floor(random(0,colors.length-0.9));
     var ang=int(random(3,5));
+   //     var ang=int(PI/2);
+
     if(ang%4==0)ang+=PI/2;
-    var dur=map(ang,3,5,500,600);//random(500,3000);
+    var dur=map(ang,3,5,1000,2000);//random(500,3000);
     var wait=dur;
 
     winds.push(new WindWidthParameters(mouseX,mouseY,vel,ang,dur,0,'easeInQuad',col,false));
@@ -545,7 +601,7 @@ function makeWaveWithZero(){
 function makeWave(){
     //winds.push(new Wind(mouseX,mouseY,true));
 
-    var vel =30;//random(10,20);
+    var vel =20;//random(10,20);
     var col=floor(random(0,colors.length-0.9));
     var ang=int(random(3,5));
     if(ang%4==0)ang+=PI/2;
@@ -591,10 +647,21 @@ function keyPressed(event){
       rasterwidth=localStorage.getItem("rasterwidth");
   }
 
+if(event.key=="o"){
+      var vel =5;//random(10,20);
+    var col=floor(random(0,colors.length-0.9));
+    var ang=int(random(1,2));
+    if(ang%4==0)ang+=PI/2;
+    var dur=map(ang,1,2,500,800);//random(500,3000);
+    var wait=dur;
+  winds.push(new WindObjectWithParameters(mouseX,mouseY,random(400,800),random(400,800),vel,20,ang,dur,0,'easeInQuad',col,false));
+}
+
+
 }
 
 function touchEnded() {
-      makeWaveWithZero();
+     // makeWaveWithZero();
 }
 
 
@@ -657,6 +724,13 @@ class WindVane {
     this.hasWind=false;
     this.isOnMask=false;
     this.easingType='easeInOutSine';
+
+
+this.cropPos=sin(iX);
+this.cropSpeed=0.1;
+this.cropSine=sin(map(iX,0,windowWidth,-1,1));
+
+
 
 
 //  if(iY<height/2)this.rotspeed = map(iY,0,height/2,0.1,0.4);
@@ -723,11 +797,13 @@ switch (this.easingType) {
     // this.currentAlpha=this.targetAlpha;
     }
 
+
+    this.cropPos=map(sin(this.cropSine),-1,1,0,this.diameter);
+    this.cropSine+=this.cropSpeed;
+
 }
 
   display() {
-
-  
 
     //strokeCap(SQUARE);
 if(isOffscreen){
@@ -803,7 +879,7 @@ hasDisplayed(){
         stroke(255,0,0);
         line(0,0,p.x,p.y);
       }
-      rotate(p.heading());
+      //rotate(p.heading());
       return p.heading();
   }
 
@@ -994,7 +1070,7 @@ class WindWidthParameters {
       this.radius = 0;
       this.velocity=velocity;
       this.maxRadius=2500;
-      this.innerradius=rasterwidth;
+      this.innerradius=rasterwidth+100;
       this.currentInnerRadius=0;
       this.isMasked=isMasked;
       this.deleteMe=false;
@@ -1003,6 +1079,8 @@ class WindWidthParameters {
       latestAngle=this.angle;
       this.duration=dur;//random(500,3000);
       this.color=color(colors[col]);
+           // this.color=color(colors[col]);
+      //this.color=color(colors[0]);
       this.initTime=millis();
       this.wait=wait;
       this.easingType=easingType;
@@ -1024,8 +1102,115 @@ class WindWidthParameters {
     stroke(255,0,0,50);
     noFill();
     translate(this.x,this.y);
-    //ellipse(0,0, this.radius*2,this.radius*2);
-    //ellipse(0,0, this.currentInnerRadius*2,this.currentInnerRadius*2);
+    ellipse(0,0, this.radius*2,this.radius*2);
+    ellipse(0,0, this.currentInnerRadius*2,this.currentInnerRadius*2);
+    pop();
+  }
+
+  getDeleteMe(){
+    return this.deleteMe;
+  }
+
+}
+
+
+class WindObjectWithParameters {
+  constructor(iX,iY,width,height,velocity,limit,angle,dur,wait,easingType,col,isMasked) {
+      this.x = iX;
+      this.y =iY;
+      this.radius = 0;
+      this.velocity=velocity;
+      this.maxRadius=2500;
+      this.innerradius=rasterwidth+100;
+      this.currentInnerRadius=0;
+      this.isMasked=isMasked;
+      this.deleteMe=false;
+
+      this.angle=latestAngle+(angle*PI/2);//random(2*PI);
+      latestAngle=this.angle;
+      this.duration=dur;//random(500,3000);
+      this.color=color(colors[col]);
+     // this.color=color(colors[0]);
+
+      this.initTime=millis();
+      this.wait=wait;
+      this.easingType=easingType;
+      this.pos = createVector(this.x,this.y);
+      this.width=width;
+      this.height=height;
+      this.radius=this.width;
+      this.windobject=true;
+      this.circleDistance=200;
+      this.circleRadius=500;
+      this.debug=false;
+
+      let p=createVector(0,0);
+      this.rotspeed=0.5;
+      this.circleRot=0;
+      this.acceleration=createVector(0,0);
+      this.vel=createVector(0,0);
+      this.limit=limit;
+
+
+  }
+
+  move(){
+
+
+
+
+  let c=createVector(this.circleDistance,0);
+  let v=createVector(this.circleRadius/2,0);      
+      v.rotate(this.circleRot);
+  this.p=c.add(v);
+
+
+  this.acceleration.set(this.p.x,this.p.y);
+  this.vel.add(this.acceleration);
+  this.vel.limit(this.limit);
+
+  /*
+    if(millis()>this.initTime+this.wait){
+      this.radius+=this.velocity;
+      if(this.radius>this.maxRadius)this.deleteMe=true;
+      this.currentInnerRadius=this.radius-this.innerradius;
+      if(this.currentInnerRadius<0)this.currentInnerRadius=0;
+    }*/
+    //this.pos.set(mouseX,mouseY);
+   // this.pos.x+=random(-50,50);
+    //    this.pos.y+=random(-50,50);
+        this.pos.add(this.vel);
+
+
+
+    this.circleRot+=random(-this.rotspeed,this.rotspeed); 
+
+
+  }
+
+  display(){
+        if(this.debug){
+
+    push();
+    strokeWeight(1);
+    stroke(255,0,0,50);
+    noFill();
+    translate(this.pos.x,this.pos.y);
+    ellipse(0,0, this.radius*2,this.radius*2);
+
+
+      push();
+        strokeWeight(1)
+        noFill();
+        ellipse(this.circleDistance, 0, this.circleRadius,this.circleRadius);
+        stroke(255,0,0);
+        line(0,0,this.p.x,this.p.y);
+        ellipse(this.p.x,this.p.y,5,5);
+
+        pop();
+      }
+
+   // ellipse(0,0, this.currentInnerRadius*2,this.currentInnerRadius*2);
     pop();
   }
 
