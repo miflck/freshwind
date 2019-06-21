@@ -116,6 +116,9 @@ let buffer;
 var isOffscreen=true ;
 
 
+var fixedWindowWidth=1920;
+var fixedWindowHeight=1200;
+
 
 function preload() {
     img1 = loadImage('assets/1.png');
@@ -133,10 +136,14 @@ function setup() {
 
      // winds.push( new Wind(windowWidth/2,windowHeight/2) );
 
+ fixedWindowWidth=windowWidth;
+ fixedWindowHeight=windowHeight;
 
-  //createCanvas(710, 400);
-    createCanvas(windowWidth, windowHeight);
-    buffer = createGraphics(windowWidth, windowHeight);
+ alert(fixedWindowWidth+" "+fixedWindowHeight)
+
+  createCanvas(fixedWindowWidth, fixedWindowHeight);
+   // createCanvas(fixedWindowWidth, fixedWindowHeight);
+    buffer = createGraphics(fixedWindowWidth, fixedWindowHeight);
 
     frameRate(60);
 
@@ -188,6 +195,8 @@ function createVanes(){
       vanes.push( new WindVane(res*i, res*j) );
     }
   };
+
+
   numVanes=vanes.length;
   console.log("num Vanes"+numVanes);
 
@@ -273,9 +282,16 @@ if(zerowaveIsRunning){
 
     
 // stroke(255,0,0);
+    var mil=millis();
 
-     vanes.map(vane =>{
-        let alph=getAlphaVal(vane.x , vane.y,actualImage);
+  buffer.beginShape(LINES);
+
+for(var i=0;i<vanes.length;i++) {       
+    var vane=vanes[i];
+
+  
+
+  let alph=getAlphaVal(vane.x , vane.y,actualImage);
 
           if(alph>5 ){
             vane.isOnMask=true;
@@ -283,8 +299,8 @@ if(zerowaveIsRunning){
             vane.isOnMask=false;
           }
 
-        buffer.stroke(vane.getStrokecolor());
-        stroke(vane.getStrokecolor());
+        //buffer.stroke(vane.getStrokecolor());
+        //stroke(vane.getStrokecolor());
 
         
         winds.map((wind,i) =>{
@@ -303,139 +319,41 @@ if(zerowaveIsRunning){
            if(outer &! inner){
              setActive(vane,wind);
             };
-            // Circles End
         }
       })
-
-      vane.update();
       
+      vane.update(mil);
 
-      if(isOffscreen){
-          //buffer.push();
-       
-      //vane.flutter();
-
-           // if(fade) {
+          
               vane.fadeTo(vane.targetAlpha,0.09);
               vane.strokeColor.setAlpha(vane.currentAlpha);
               buffer.stroke(vane.strokeColor);
-           // }
-
-           // buffer.translate(vane.x,vane.y);
-           //buffer.rotate(vane.getCurrentAngle());
-
-          //if(this.hasWind){
-             // buffer.rotate(vane.flutter());
-
-         // }
-      //buffer.rotate(vane.flutter());
-
-          if(center){
-            buffer.line(-vane.diameter/2,0,vane.diameter/2,0);
-          }else{
+           
+      
             if(vane.debug){
               buffer.stroke(vane.strokeColor);
               buffer.strokeWeight(strokeWidth);
             }
-            //PVector(this.x,this.y);
-            
-            let pos = createVector(vane.x,vane.y);
-            let diff=createVector(vane.diameter-5,0);
-            diff.rotate(vane.getCurrentAngle());
-            if(isFlutter)diff.rotate(vane.flutter());
-            let pos2=pos.add(diff);
-            //pos2.rotate(vane.getCurrentAngle());
-            //buffer.beginShape(POINTS);
-
-            //if(off){
-             // line(vane.x,vane.y,pos2.x,pos2.y);
-           // }
-             // else{
-              buffer.line(vane.x,vane.y,pos2.x,pos2.y);
+            var dX=Math.cos(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
+            var dY=Math.sin(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
 
 
-            let npos = createVector(vane.x,vane.y);
-            let ndiff=createVector(vane.diameter-5,0);
-            ndiff.rotate(vane.getCurrentAngle());
-            let npos2=npos.copy();//.add(diff);
-            npos2.add(ndiff);
-           let vec=npos2.copy();
-           vec.sub(npos);
 
-           // vane.cropPos=map(sin(this.cropSine),-1,1,0,this.diameter);
-           vec.normalize();
-            vec.mult(vane.cropPos);
+            buffer.line(vane.x,vane.y,vane.x+dX,vane.y+dY);
+           //   buffer.vertex(vane.x,vane.y,0);
+            //  buffer.vertex(vane.x+dX,vane.y+dY,0);
 
-              //  buffer.ellipse(npos.x,npos.y,10,10);
-               // buffer.stroke(255,0,0);
-               // buffer.ellipse(npos.x,npos.y,5,5);
-               // buffer.stroke(0,255,0);
-               // buffer.ellipse(npos2.x,npos2.y,5,5);
-
-             //   buffer.stroke(0,0,255);
-            //    buffer.ellipse(vane.x+vec.x,vane.y+vec.y,5,5);
-                               // buffer.ellipse(npos2.x,npos2.y+vec.y,5,5);
-
-
-               // buffer.ellipse(npos2.x,npos2.y,10,10);
-
-             // }
-              //buffer.rect(vane.x,vane.y,pos2.x-vane.x,pos2.y-vane.y);
-                  //buffer.line(vane.x,vane.y,pos2.x,pos2.y);
-            //buffer.ellipse(pos2.x,pos2.y,10,10);
-          //  buffer.rect(pos.x,pos.y,pos2.x-pos.x,pos2.y-pos.y);
-
-           // buffer.image(pg,0,0);
-           //buffer.beginShape(LINES);
-              //buffer.vertex(vane.x,vane.y);
-              //buffer.vertex(pos2.x,pos2.y);
-          //buffer.endShape();
-         // fill(0);
-          //rect(0,0,50,50);
-         // line(vane.x,vane.y,pos2.x,pos2.y);
-
-
-          }
-        // buffer.pop();
-
-      }else{
-  
-          vane.display();
-
-      }
+    
 
       vane.hasDisplayed();
 
-     })
+     }
 
-//buffer.endShape();
+       buffer.endShape();
 
-    //for (var i = 0; i < numVanes; i++) {
-      //let loc = (vanes[i].x + vanes[i].y * img.width) * 4;
-      //var c=  img.get(vanes[i].x , vanes[i].y);
-     // let value = alpha(c); // Sets 'value' to 255
-     // let b=red(c);
-    //fill(value);
-    //rect(vanes[i].x,vanes[i].y,20,20);
-      //vanes[i].targetAngle=map(sin(theta),-1,1,0,2*PI);
-
-     /* var angle=calcXWave(vanes[i].x,theta,PI/2);
-      if(vanes[i].y<height/2){
-      angle=map(vanes[i].y,0,height/2,0,angle);
-      }else{
-        angle=map(vanes[i].y,height/2,height,angle,0);
-
-      }
-      vanes[i].targetAngle=angle;
-      */
-
-    //  vanes[i].setColor(color(globalStrokeColor));
-
-    //  vanes[i].display();
-    //}
     pop();
-    blendMode(MULTIPLY);
-   if(!off)if(isOffscreen)image(buffer,0,0);
+   // blendMode(MULTIPLY);
+   if(!off)if(isOffscreen)image(buffer,0,0,width,height);
 
      
 
@@ -445,7 +363,7 @@ if(zerowaveIsRunning){
         let fps = frameRate();
         fill(255,0,0);
         noStroke();
-        text("FPS: " + fps.toFixed(2), 10, windowHeight - 10);
+        text("FPS: " + fps.toFixed(2), 10, height - 10);
 
 
 }
@@ -457,7 +375,6 @@ function setActive(vane,wind){
               vane.setDuration(duration);
               vane.setTargetAngle(angle); 
               vane.setEasingType(wind.easingType);
-
               vane.setColor(wind.color);
               if(wind.isMasked){
                 if(vane.isOnMask){
@@ -534,9 +451,9 @@ function calcXWave(posX,theta,waveLength){
 
 
 function getAlphaVal(posx, posy, image){
-  var fact=image.width/windowWidth;
-  var factH=image.height/windowHeight;
-  var off=((image.height*fact)-windowHeight)/2;
+  var fact=image.width/fixedWindowWidth;
+  var factH=image.height/fixedWindowHeight;
+  var off=((image.height*fact)-fixedWindowHeight)/2;
   var c=  image.get(posx*fact,(posy*fact)-off/2);
   let value = alpha(c); 
   return value;
@@ -728,7 +645,7 @@ class WindVane {
 
 this.cropPos=sin(iX);
 this.cropSpeed=0.1;
-this.cropSine=sin(map(iX,0,windowWidth,-1,1));
+this.cropSine=sin(map(iX,0,fixedWindowWidth,-1,1));
 
 
 
@@ -747,22 +664,22 @@ this.cropSine=sin(map(iX,0,windowWidth,-1,1));
 
 
 
-update(){
-  if(millis()<this.endAnimation){
+update(millis){
+  if(millis<this.endAnimation){
       //this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
       //this.currentAngle=easeInOutSine(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
 
 switch (this.easingType) {
   case 'easeInOutSine':
-      this.currentAngle=easeInOutSine(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+      this.currentAngle=easeInOutSine(millis-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
     break;
 
     case 'easeInQuad':
-      this.currentAngle=easeInQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+      this.currentAngle=easeInQuad(millis-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
     break;
 
     case 'easeOutQuad':
-      this.currentAngle=easeOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+      this.currentAngle=easeOutQuad(millis-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
     break;
 
 }
@@ -772,9 +689,9 @@ switch (this.easingType) {
       this.currentAngle=this.targetAngle;
      }
 
-    if(millis()<this.endAlphaAnimation){
+    if(millis<this.endAlphaAnimation){
      // this.currentAlpha=easeInOutQuad(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
-      this.currentAlpha=easeInOutSine(millis()-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
+      this.currentAlpha=easeInOutSine(millis-this.startAlphaAnimation,this.startAlpha,this.thetaAlpha,this.alphaDuration);
 
      /* switch (this.easingType) {
         case 'easeInOutSine':
@@ -798,8 +715,8 @@ switch (this.easingType) {
     }
 
 
-    this.cropPos=map(sin(this.cropSine),-1,1,0,this.diameter);
-    this.cropSine+=this.cropSpeed;
+  //  this.cropPos=map(sin(this.cropSine),-1,1,0,this.diameter);
+    //this.cropSine+=this.cropSpeed;
 
 }
 
@@ -856,7 +773,7 @@ if(isOffscreen){
   }
 
 hasDisplayed(){
-    this.circleRot+=this.rotspeed; 
+    //this.circleRot+=this.rotspeed; 
 
 
   }
@@ -867,7 +784,7 @@ hasDisplayed(){
 
 
   flutter(){
-    let c=createVector(this.circleDistance,0);
+    /*let c=createVector(this.circleDistance,0);
       let v=createVector(this.circleRadius/2,0);      
       v.rotate(this.circleRot);
       let p=c.add(v);
@@ -880,7 +797,8 @@ hasDisplayed(){
         line(0,0,p.x,p.y);
       }
       //rotate(p.heading());
-      return p.heading();
+      return p.heading();*/
+      return 0;
   }
 
 
@@ -1034,7 +952,7 @@ class Wind {
       this.flutterRadius=random(50,200);
       this.flutterSpeed=random(0.1,0.5);
       this.rotMax=random(5*PI);//*int(random(5));
-            this.easingType='easeInOutSine';
+      this.easingType='easeOutQuad';
 
 
   }
@@ -1233,6 +1151,11 @@ function check_a_point(a, b, x, y, r) {
 
 // dynamically adjust the canvas to the window
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  createVanes();
+
+   fixedWindowWidth=windowWidth;
+ fixedWindowHeight=windowHeight;
+
+ alert(fixedWindowWidth+" "+fixedWindowHeight)
+ // resizeCanvas(fixedWindowWidth, fixedWindowHeight);
+ // createVanes();
 }
