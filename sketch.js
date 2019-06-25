@@ -13,8 +13,8 @@ let actualImage;
 
 
 var theta = 0;
-var rasterwidth = 30;
-var rasterwidthMin=15;
+var rasterwidth = 25;
+var rasterwidthMin=10;
 var rasterwidthMax=100;
 var rasterwidthBefore=rasterwidth;
 
@@ -24,12 +24,12 @@ var weight=10;
 
 var unmaskedAlphaMin=0;
 var unmaskedAlphaMax=255;
-var unmaskedAlpha=120;
+var unmaskedAlpha=80;
 
 
 var alphaTraceMin=0;
 var alphaTraceMax=255;
-var alphaTrace=180;
+var alphaTrace=110;
 
 
 
@@ -124,26 +124,33 @@ function preload() {
     img1 = loadImage('assets/1.png');
     img2 = loadImage('assets/2.png');
     img3 = loadImage('assets/3.png');
-    img4 = loadImage('assets/4_2.png');
-    img5 = loadImage('assets/5.png');
 }
 
 
 let colors;
 
 
+let eraseWaveInitTime;
+let eraseWaveTimerDuration;
+
+let waveInitTime;
+let waveTimerDuration;
+
+
 function setup() {
+
 
      // winds.push( new Wind(windowWidth/2,windowHeight/2) );
 
- fixedWindowWidth=windowWidth;
- fixedWindowHeight=windowHeight;
+ //fixedWindowWidth=windowWidth;
+ //fixedWindowHeight=windowHeight;
 
- alert(fixedWindowWidth+" "+fixedWindowHeight)
+ //alert(fixedWindowWidth+" "+fixedWindowHeight)
 
   createCanvas(fixedWindowWidth, fixedWindowHeight);
    // createCanvas(fixedWindowWidth, fixedWindowHeight);
     buffer = createGraphics(fixedWindowWidth, fixedWindowHeight);
+    buffer.smooth(8);
 
     frameRate(60);
 
@@ -156,14 +163,12 @@ function setup() {
   img1.loadPixels();
   img2.loadPixels();
   img3.loadPixels();
-  img4.loadPixels();
-  img5.loadPixels();
+
 
   imageArray.push(img1);
   imageArray.push(img2);
   imageArray.push(img3);
-  imageArray.push(img4);
-  imageArray.push(img5);
+
 
   actualImage=img1;
   actualImageIndex=0;
@@ -179,6 +184,13 @@ colors.push(color('#2D5F70'));
 colors.push(color('#008FBD'));
 colors.push(color('#007AC0'));
 colors.push(color('#0062B8'));
+
+waveInitTime=millis();
+eraseWaveInitTime=millis();
+eraseWaveTimerDuration=random(500,1000);
+waveTimerDuration=random(2000,4000);
+
+    setMask(actualImage);
 
 
 }
@@ -206,9 +218,32 @@ function createVanes(){
   pg.line(-rasterwidth/2,0,rasterwidth/2,0);
 }
 
+
+
+
+
+
 function draw() {
     //  externals.context.clearRect(0,0,width,height);// part of the canvasAPI that creates a clear rect
 
+
+  var mil=millis();
+
+
+  if(mil>eraseWaveInitTime+eraseWaveTimerDuration){
+   makeEraseWave(false);
+    eraseWaveInitTime=millis();
+    eraseWaveTimerDuration=random(500,4000);
+  }
+
+    if(mil>waveInitTime+waveTimerDuration){
+    makeWave(false);
+    waveInitTime=millis();
+    waveTimerDuration=random(10000,20000);
+
+    eraseWaveInitTime=millis();
+    eraseWaveTimerDuration=random(4000,6000);
+  }
 
 /*
   switch(images){
@@ -234,7 +269,7 @@ function draw() {
 
   // Gui changes
   if(rasterwidth!=rasterwidthBefore){
-      createVanes();
+     // createVanes();
   }
 
 /*
@@ -282,26 +317,10 @@ if(zerowaveIsRunning){
 
     
 // stroke(255,0,0);
-    var mil=millis();
-
-  buffer.beginShape(LINES);
+ // buffer.beginShape(LINES);
 
 for(var i=0;i<vanes.length;i++) {       
     var vane=vanes[i];
-
-  
-
-  let alph=getAlphaVal(vane.x , vane.y,actualImage);
-
-          if(alph>5 ){
-            vane.isOnMask=true;
-          }else{
-            vane.isOnMask=false;
-          }
-
-        //buffer.stroke(vane.getStrokecolor());
-        //stroke(vane.getStrokecolor());
-
         
         winds.map((wind,i) =>{
           if (wind.windobject==true){
@@ -324,46 +343,43 @@ for(var i=0;i<vanes.length;i++) {
       
       vane.update(mil);
 
-          
-              vane.fadeTo(vane.targetAlpha,0.09);
-              vane.strokeColor.setAlpha(vane.currentAlpha);
-              buffer.stroke(vane.strokeColor);
-           
+  
+      vane.fadeTo(vane.targetAlpha,0.09);
+      vane.strokeColor.setAlpha(vane.currentAlpha);
+      buffer.stroke(vane.strokeColor);
+   
+
+    if(vane.debug){
+      buffer.stroke(vane.strokeColor);
+      buffer.strokeWeight(strokeWidth);
+    }
+    var dX=Math.cos(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
+    var dY=Math.sin(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
+
+
+
+    buffer.line(vane.x,vane.y,vane.x+dX,vane.y+dY);
       
-            if(vane.debug){
-              buffer.stroke(vane.strokeColor);
-              buffer.strokeWeight(strokeWidth);
-            }
-            var dX=Math.cos(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
-            var dY=Math.sin(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
-
-
-
-            buffer.line(vane.x,vane.y,vane.x+dX,vane.y+dY);
-           //   buffer.vertex(vane.x,vane.y,0);
-            //  buffer.vertex(vane.x+dX,vane.y+dY,0);
-
-    
-
       vane.hasDisplayed();
 
      }
 
-       buffer.endShape();
 
     pop();
    // blendMode(MULTIPLY);
-   if(!off)if(isOffscreen)image(buffer,0,0,width,height);
+  // if(!off)if(isOffscreen)image(buffer,0,0,width,height);
+     // if(!off)if(isOffscreen)image(buffer,0,0,fixedWindowWidth,fixedWindowHeight);
+
 
      
-
-      theta-=0.2;
-      rasterwidthBefore=rasterwidth;
-
-        let fps = frameRate();
-        fill(255,0,0);
-        noStroke();
-        text("FPS: " + fps.toFixed(2), 10, height - 10);
+    image(buffer,0,0,fixedWindowWidth,fixedWindowHeight);
+    theta-=0.2;
+    rasterwidthBefore=rasterwidth;
+    
+    let fps = frameRate();
+    fill(255,0,0);
+    noStroke();
+    text("FPS: " + fps.toFixed(2), 10, height - 10);
 
 
 }
@@ -497,34 +513,61 @@ function mousePressed(event) {
 
 
 function makeWaveWithZero(){
-    //winds.push(new Wind(mouseX,mouseY,true));
-
     var vel =20;//random(50,70);
     var col=floor(random(0,colors.length-0.9));
-    var ang=int(random(3,5));
-   //     var ang=int(PI/2);
-
+    var ang=int(random(10,15));
     if(ang%4==0)ang+=PI/2;
-    var dur=map(ang,3,5,1000,2000);//random(500,3000);
+    var dur=map(ang,3,5,500,1000);//random(500,3000);
     var wait=dur;
-
     winds.push(new WindWidthParameters(mouseX,mouseY,vel,ang,dur,0,'easeInQuad',col,false));
     winds.push(new WindWidthParameters(mouseX,mouseY,vel,ang,dur,wait,'easeOutQuad',col,true));
-
-
 }
 
 
-function makeWave(){
-    //winds.push(new Wind(mouseX,mouseY,true));
-
+function makeWave(isMouse){
     var vel =20;//random(10,20);
     var col=floor(random(0,colors.length-0.9));
     var ang=int(random(3,5));
     if(ang%4==0)ang+=PI/2;
     var dur=map(ang,3,5,500,1000);//random(500,3000);
     var wait=dur;
-    winds.push(new WindWidthParameters(mouseX,mouseY,vel,ang,dur,0,'easeInQuad',col,true));
+    var xPos=random(-100,0);
+    var yPos=random(fixedWindowHeight);
+    if(isMouse){
+      winds.push(new WindWidthParameters(mouseX,mouseY,vel,ang,dur,0,'easeOutQuad',col,true));
+    }else{
+      winds.push(new WindWidthParameters(xPos,yPos,vel,ang,dur,0,'easeOutQuad',col,true));
+    }
+}
+
+
+function makeEraseWave(isMouse){
+    var vel =20;//random(10,20);
+    var col=floor(random(0,colors.length-0.9));
+    var ang=int(random(3,5));
+    if(ang%4==0)ang+=PI/2;
+    var dur=map(ang,3,5,500,1000);//random(500,3000);
+    var wait=dur;
+    var xPos=random(-100,0);
+    var yPos=random(fixedWindowHeight);
+    if(isMouse){
+      winds.push(new WindWidthParameters(mouseX,mouseY,vel,ang,dur,0,'easeOutQuad',col,false));
+    }else{
+      winds.push(new WindWidthParameters(xPos,yPos,vel,ang,dur,0,'easeOutQuad',col,false));
+    }
+}
+
+
+function setMask(image){
+for(var i=0;i<vanes.length;i++) {       
+    var vane=vanes[i];
+    let alph=getAlphaVal(vane.x , vane.y,image);
+      if(alph>5 ){
+        vane.isOnMask=true;
+      }else{
+        vane.isOnMask=false;
+        }
+    }
 }
 
 
@@ -532,6 +575,12 @@ function keyPressed(event){
   if(event.key=='x'){
     actualImageIndex++;
     actualImage=imageArray[actualImageIndex%imageArray.length];
+
+    setMask(actualImage);
+
+
+
+
   }
 
 
@@ -546,14 +595,19 @@ function keyPressed(event){
 
   if(event.key=='w'){
     //winds.push(new Wind(mouseX,mouseY,true));
-    makeWave();
+    makeWave(true);
   }
 
 
+
+  if(event.key=='z'){
+    makeEraseWave(true);
+  }
+/*
     if(event.key=='z'){
     winds.push(new Wind(mouseX,mouseY,false));
   }
-
+*/
 
 
   if(event.key=='h'){
@@ -668,7 +722,7 @@ update(millis){
   if(millis<this.endAnimation){
       //this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
       //this.currentAngle=easeInOutSine(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
-
+//this.easingType='easeInOutSine';
 switch (this.easingType) {
   case 'easeInOutSine':
       this.currentAngle=easeInOutSine(millis-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
@@ -711,7 +765,7 @@ switch (this.easingType) {
 
 
     }else{
-    // this.currentAlpha=this.targetAlpha;
+     this.currentAlpha=this.targetAlpha;
     }
 
 
@@ -1152,10 +1206,10 @@ function check_a_point(a, b, x, y, r) {
 // dynamically adjust the canvas to the window
 function windowResized() {
 
-   fixedWindowWidth=windowWidth;
- fixedWindowHeight=windowHeight;
+//   fixedWindowWidth=windowWidth;
+// fixedWindowHeight=windowHeight;
 
- alert(fixedWindowWidth+" "+fixedWindowHeight)
+// alert(fixedWindowWidth+" "+fixedWindowHeight)
  // resizeCanvas(fixedWindowWidth, fixedWindowHeight);
  // createVanes();
 }

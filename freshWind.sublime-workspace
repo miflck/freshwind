@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"fix",
+				"fixedWindowWidth"
+			],
+			[
+				"fi",
+				"fixedWindowHeight"
+			],
+			[
+				"win",
+				"windowWidth"
+			],
+			[
 				"wi",
 				"windowWidth"
 			],
@@ -194,10 +206,6 @@
 			[
 				"get",
 				"getAngle"
-			],
-			[
-				"win",
-				"windowHeight"
 			],
 			[
 				"rotationdurationmi",
@@ -411,6 +419,33 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "sketch.js",
+			"settings":
+			{
+				"buffer_size": 25226,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "style.css",
+			"settings":
+			{
+				"buffer_size": 385,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 1524,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -461,10 +496,11 @@
 	],
 	"file_history":
 	[
-		"/Users/fgm4/htdocs_Mamp/freshWind/sftp-config.json",
-		"/Users/fgm4/htdocs_Mamp/freshWind/sketch.js",
 		"/Users/fgm4/htdocs_Mamp/freshWind/index.html",
 		"/Users/fgm4/htdocs_Mamp/freshWind/style.css",
+		"/Users/fgm4/htdocs_Mamp/freshWind/sketch.js",
+		"/Users/fgm4/htdocs_Mamp/p5js_webgl/assets/Bryant-Regular.otf",
+		"/Users/fgm4/htdocs_Mamp/freshWind/sftp-config.json",
 		"/Users/fgm4/htdocs_Mamp/freshWind/helper.js",
 		"/Users/fgm4/htdocs_Mamp/freshWind/p5.dom.min.js",
 		"/Users/fgm4/Repos/typoclubTalk/index.html",
@@ -587,12 +623,11 @@
 		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/modules/sigi_core/sigi-media/styles/less/mixins.less",
 		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/media/js/isotope.min.js",
 		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/modules/sigi_core/sigi-media/styles/less/sigi.less",
-		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/modules/sigi_core/classes/Backend/Actionbox.php",
-		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/modules/sigi_core/views/backend/medialink/container.php"
+		"/Users/fgm4/htdocs_Mamp/fork_sigi3_4_app/modules/sigi_core/classes/Backend/Actionbox.php"
 	],
 	"find":
 	{
-		"height": 24.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -607,6 +642,43 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"getAlphaVal",
+			"localStorage",
+			"images",
+			"img1",
+			"buffer",
+			"fixedWindowWidth",
+			"WindWidthParameters",
+			"this.easingType",
+			"makewave",
+			"fill",
+			"image",
+			"blendmo",
+			"circleRot",
+			"flutter",
+			"WindWidthParameters",
+			"makeWaveWithZero",
+			"easeInQuad",
+			"easeOutQuad",
+			"setActive",
+			"diameter",
+			"millis",
+			"buffer",
+			"createCanvas",
+			"createVa",
+			"createV",
+			"create",
+			"size",
+			"sizd",
+			"createVanes",
+			"width",
+			"createVanes",
+			"createV",
+			"create",
+			"createVanes",
+			"windowHeight",
+			"windowWidth",
+			"WindObjectWithParameters",
 			"WindWidthParameters",
 			"WindObjectWithParameters",
 			"color",
@@ -697,44 +769,7 @@
 			"startAnimation",
 			"console.log",
 			"targetAngle",
-			"getTargetAngle",
-			"flutterwave",
-			"setFlutterParams",
-			"setColor",
-			"currentInnerRadius",
-			"checka",
-			"setColor",
-			"setTargetAngle",
-			"setDuration",
-			"mouse",
-			"getDeleteMe",
-			"vanes",
-			"    strokeWeight(strokeWidth);\n",
-			"strokeWe",
-			"debug",
-			"flutterWave",
-			"circleRot",
-			"waveNum",
-			"center",
-			"setAngle",
-			"mouse",
-			"durationAlpha",
-			"fade",
-			"intervall",
-			"interval",
-			"inversed",
-			"saveInLocalStorage",
-			"save",
-			"quicksettings",
-			"getAngle",
-			"zerowaveIsRunning",
-			"startZeroWave",
-			"countX",
-			"zeroWaveIsRunning",
-			"aveIsRunning",
-			"zeroWaveIsRunning",
-			"waveIsRunn",
-			"waveIsRunning"
+			"getTargetAngle"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -752,8 +787,106 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "sketch.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 25226,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9927,
+								9844
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 2.0,
+						"translation.y": 7793.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "style.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 385,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								214,
+								214
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/CSS/CSS.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1524,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1013,
+								1013
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		}
 	],
