@@ -102,8 +102,6 @@ p5.disableFriendlyErrors = true; // disables FES
 var numVanes;
 
 
-// performance
-let pg;
 
 var winds=[];
 var windObjects=[];
@@ -120,15 +118,27 @@ var fixedWindowWidth=1920;
 var fixedWindowHeight=1200;
 
 
+var scaleFact=1;
+
+var fixedBufferWidth=1920*scaleFact;
+var fixedBufferHeight=1200*scaleFact;
+
+
+var fixedBufferWidth=1920;
+var fixedBufferHeight=1200;
+
+
 function preload() {
-    img1 = loadImage('assets/1.png');
-    img2 = loadImage('assets/2.png');
-    img3 = loadImage('assets/3.png');
+    img1 = loadImage('assets/11.png');
+    img2 = loadImage('assets/22.png');
+    img3 = loadImage('assets/33.png');
 }
 
 
 let colors;
 
+
+let bIsTimed=true;
 
 let eraseWaveInitTime;
 let eraseWaveTimerDuration;
@@ -139,26 +149,17 @@ let waveTimerDuration;
 
 function setup() {
 
-
-     // winds.push( new Wind(windowWidth/2,windowHeight/2) );
-
- //fixedWindowWidth=windowWidth;
- //fixedWindowHeight=windowHeight;
-
- //alert(fixedWindowWidth+" "+fixedWindowHeight)
-
   createCanvas(fixedWindowWidth, fixedWindowHeight);
-   // createCanvas(fixedWindowWidth, fixedWindowHeight);
-    buffer = createGraphics(fixedWindowWidth, fixedWindowHeight);
-    buffer.smooth(8);
+  //buffer = createGraphics(fixedBufferWidth, fixedBufferHeight);
+   buffer = createGraphics(fixedWindowWidth, fixedWindowHeight);
 
-    frameRate(60);
+  buffer.smooth(8);
+
+  frameRate(60);
 
   // Create Layout GUI
   gui = createGui('P5 GUI');
-  //gui.addGlobals( 'images','globalStrokeColor', 'rasterwidth','strokeWidth','fade','center','inverted','durationBlack','durationAlpha','durationDilitation','intervall','howMuchRows');
   gui.addGlobals( 'rasterwidth','strokeWidth','center','unmaskedAlpha','fade','alphaTrace','isOffscreen','inverted','isFlutter');
-
 
   img1.loadPixels();
   img2.loadPixels();
@@ -170,27 +171,31 @@ function setup() {
   imageArray.push(img3);
 
 
-  actualImage=img1;
-  actualImageIndex=0;
+
 
   createVanes();
 
-colors=[];
-colors.push(color('#5EC29C'));
-colors.push(color('#3DAA9A'));
-colors.push(color('#2A9192'));
-colors.push(color('#287884'));
-colors.push(color('#2D5F70'));
-colors.push(color('#008FBD'));
-colors.push(color('#007AC0'));
-colors.push(color('#0062B8'));
+  colors=[];
+  colors.push(color('#5EC29C'));
+  colors.push(color('#3DAA9A'));
+  colors.push(color('#2A9192'));
+  colors.push(color('#287884'));
+  colors.push(color('#2D5F70'));
+  colors.push(color('#008FBD'));
+  colors.push(color('#007AC0'));
+  colors.push(color('#0062B8'));
 
-waveInitTime=millis();
-eraseWaveInitTime=millis();
-eraseWaveTimerDuration=random(500,1000);
-waveTimerDuration=random(2000,4000);
+  waveInitTime=millis();
+  eraseWaveInitTime=millis();
+  eraseWaveTimerDuration=random(500,1000);
+  waveTimerDuration=random(2000,4000);
 
-    setMask(actualImage);
+
+  actualImage=img1;
+  actualImageIndex=0;
+  setMask(actualImage);
+  pixelDensity(1);
+  gui.hide();
 
 
 }
@@ -199,23 +204,15 @@ waveTimerDuration=random(2000,4000);
 function createVanes(){
   vanes =[];
   res = rasterwidth;
-   countX = ceil(width/res) + 1;
-   countY = ceil(height/res) + 1;
-
+   countX = ceil(fixedBufferWidth/res) + 1;
+   countY = ceil(fixedBufferHeight/res) + 1;
   for (var j = 0; j < countY; j++) {
     for (var i = 0; i < countX; i++) {
       vanes.push( new WindVane(res*i, res*j) );
     }
   };
-
-
   numVanes=vanes.length;
   console.log("num Vanes"+numVanes);
-
-  pg = createGraphics(rasterwidth, rasterwidth);
-  pg.noFill();
-  pg.stroke(255,0,0);
-  pg.line(-rasterwidth/2,0,rasterwidth/2,0);
 }
 
 
@@ -224,27 +221,21 @@ function createVanes(){
 
 
 function draw() {
-    //  externals.context.clearRect(0,0,width,height);// part of the canvasAPI that creates a clear rect
-
-
-  var mil=millis();
-
-
+var mil=millis();
+if(bIsTimed){
   if(mil>eraseWaveInitTime+eraseWaveTimerDuration){
    makeEraseWave(false);
     eraseWaveInitTime=millis();
     eraseWaveTimerDuration=random(500,4000);
   }
-
     if(mil>waveInitTime+waveTimerDuration){
     makeWave(false);
     waveInitTime=millis();
     waveTimerDuration=random(10000,20000);
-
     eraseWaveInitTime=millis();
     eraseWaveTimerDuration=random(4000,6000);
   }
-
+}
 /*
   switch(images){
         case 'img1':
@@ -269,7 +260,7 @@ function draw() {
 
   // Gui changes
   if(rasterwidth!=rasterwidthBefore){
-     // createVanes();
+      createVanes();
   }
 
 /*
@@ -303,76 +294,64 @@ if(zerowaveIsRunning){
 
   winds.map((wind,i) =>{
     wind.move();
-    wind.display();
     if(wind.getDeleteMe()){
       console.log("delete "+i);
       winds.splice(i,1);
     }
   })
 
-  push();
-  strokeWeight(strokeWidth);
-   // noStroke();
+ // push();
   buffer.strokeWeight(strokeWidth);
 
+
+
+  for(var i=0;i<vanes.length;i++) {       
+      var vane=vanes[i];
+
+       // for(var w=0;w<winds.length;w++) {   
+
+                winds.map((wind,i) =>{
     
-// stroke(255,0,0);
- // buffer.beginShape(LINES);
 
-for(var i=0;i<vanes.length;i++) {       
-    var vane=vanes[i];
+            //var wind=winds[w];
+            if (wind.windobject==true){
+                let outer=check_a_point(vane.x,vane.y,wind.pos.x,wind.pos.y,wind.radius);
+
+                if(outer){
+                  setActiveDebug(vane,wind);
+                }
+
+            }else{
+              let outer=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.radius);
+              let inner=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.currentInnerRadius);
+             
+             // Circles
+             if(outer &! inner){
+               setActive(vane,wind);
+              };
+         }
+        })
         
-        winds.map((wind,i) =>{
-          if (wind.windobject==true){
-              let outer=check_a_point(vane.x,vane.y,wind.pos.x,wind.pos.y,wind.radius);
+        vane.update(mil);
+        vane.fadeTo(vane.targetAlpha,0.09);
+        vane.strokeColor.setAlpha(vane.currentAlpha);
+        buffer.stroke(vane.strokeColor);
 
-              if(outer){
-                setActiveDebug(vane,wind);
-              }
+        var dX=Math.cos(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
+        var dY=Math.sin(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
 
-          }else{
-            let outer=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.radius);
-            let inner=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.currentInnerRadius);
-           
-           // Circles
-           if(outer &! inner){
-             setActive(vane,wind);
-            };
-        }
-      })
-      
-      vane.update(mil);
-
-  
-      vane.fadeTo(vane.targetAlpha,0.09);
-      vane.strokeColor.setAlpha(vane.currentAlpha);
-      buffer.stroke(vane.strokeColor);
-   
-
-    if(vane.debug){
-      buffer.stroke(vane.strokeColor);
-      buffer.strokeWeight(strokeWidth);
-    }
-    var dX=Math.cos(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
-    var dY=Math.sin(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
-
-
-
-    buffer.line(vane.x,vane.y,vane.x+dX,vane.y+dY);
-      
+      buffer.line(vane.x,vane.y,vane.x+dX,vane.y+dY);
       vane.hasDisplayed();
+    }
 
-     }
-
-
-    pop();
-   // blendMode(MULTIPLY);
+  //pop();
+  // blendMode(MULTIPLY);
   // if(!off)if(isOffscreen)image(buffer,0,0,width,height);
-     // if(!off)if(isOffscreen)image(buffer,0,0,fixedWindowWidth,fixedWindowHeight);
+  // if(!off)if(isOffscreen)image(buffer,0,0,fixedWindowWidth,fixedWindowHeight);
 
 
      
-    image(buffer,0,0,fixedWindowWidth,fixedWindowHeight);
+    image(buffer,0,0);
     theta-=0.2;
     rasterwidthBefore=rasterwidth;
     
@@ -386,29 +365,31 @@ for(var i=0;i<vanes.length;i++) {
 
 
 function setActive(vane,wind){
+  //if(!vane.isActive){
+  //vane.isActive=true;
    var angle=wind.angle
-              var duration=wind.duration
-              vane.setDuration(duration);
-              vane.setTargetAngle(angle); 
-              vane.setEasingType(wind.easingType);
-              vane.setColor(wind.color);
-              if(wind.isMasked){
-                if(vane.isOnMask){
-                  vane.setDuration(duration+500);
-                  vane.setTargetAngle(angle+PI/4); 
-                  vane.setAlphaDuration(duration-500);
-                  vane.setTargetAlpha(255);
-                  vane.setFlutterParams(500,50,0.5)
-                }else{
-                  vane.setAlphaDuration(duration-500);
-                  //vane.setAlphaDuration(duration+500);
-                  vane.setTargetAlpha(unmaskedAlpha);
-                  if(fade)vane.setTargetAlpha(0);
-                  vane.setFlutterParams(500,100,0.05)
-                }
-              }else{
-                  vane.setTargetAlpha(255);
-              }
+    var duration=wind.duration
+    vane.setDuration(duration);
+    vane.setTargetAngle(angle); 
+    vane.setEasingType(wind.easingType);
+    vane.setColor(wind.color);
+    if(wind.isMasked){
+      if(vane.isOnMask){
+        vane.setDuration(duration+500);
+        vane.setTargetAngle(angle+PI/4); 
+        vane.setAlphaDuration(duration-500);
+        vane.setTargetAlpha(255);
+        vane.setFlutterParams(500,50,0.5)
+      }else{
+        vane.setAlphaDuration(duration-500);
+        vane.setTargetAlpha(unmaskedAlpha);
+        if(fade)vane.setTargetAlpha(0);
+        vane.setFlutterParams(500,100,0.05)
+      }
+    }else{
+        vane.setTargetAlpha(255);
+    }
+ // }
 }
 
 
@@ -466,15 +447,34 @@ function calcXWave(posX,theta,waveLength){
 }
 
 
-function getAlphaVal(posx, posy, image){
+/*function getAlphaVal(posx, posy, image){
   var fact=image.width/fixedWindowWidth;
   var factH=image.height/fixedWindowHeight;
   var off=((image.height*fact)-fixedWindowHeight)/2;
   var c=  image.get(posx*fact,(posy*fact)-off/2);
   let value = alpha(c); 
   return value;
-}
+}*/
 
+
+/*
+function getAlphaVal(posx, posy, image){
+  var fact=image.width/fixedBufferWidth;
+  var factH=image.height/fixedBufferHeight;
+  var off=((image.height*fact)-fixedBufferHeight)/2;
+  var c=  image.get(posx*fact,(posy*fact));
+  let value = alpha(c); 
+  return value;
+}*/
+
+function getAlphaVal(posx, posy, image){
+  var fact=image.width/fixedBufferWidth;
+  var factH=image.height/fixedBufferHeight;
+  var off=((image.height*fact)-fixedBufferHeight)/2;
+  var c=  image.get(posx*fact,(posy*fact));
+  let value = alpha(c); 
+  return value;
+}
 
 function getRow(num){
 
@@ -702,6 +702,8 @@ this.cropSpeed=0.1;
 this.cropSine=sin(map(iX,0,fixedWindowWidth,-1,1));
 
 
+this.isActive=false;
+
 
 
 //  if(iY<height/2)this.rotspeed = map(iY,0,height/2,0.1,0.4);
@@ -720,27 +722,24 @@ this.cropSine=sin(map(iX,0,fixedWindowWidth,-1,1));
 
 update(millis){
   if(millis<this.endAnimation){
-      //this.currentAngle=easeInOutQuad(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
-      //this.currentAngle=easeInOutSine(millis()-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
-//this.easingType='easeInOutSine';
-switch (this.easingType) {
-  case 'easeInOutSine':
-      this.currentAngle=easeInOutSine(millis-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
-    break;
+    switch (this.easingType) {
+      case 'easeInOutSine':
+          this.currentAngle=easeInOutSine(millis-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+        break;
 
-    case 'easeInQuad':
-      this.currentAngle=easeInQuad(millis-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
-    break;
+        case 'easeInQuad':
+          this.currentAngle=easeInQuad(millis-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+        break;
 
-    case 'easeOutQuad':
-      this.currentAngle=easeOutQuad(millis-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
-    break;
-
-}
+        case 'easeOutQuad':
+          this.currentAngle=easeOutQuad(millis-this.startAnimation,this.startAngle,this.thetaAngle,this.duration);
+        break;
+    }
 
       
-     }else{
+     }else {
       this.currentAngle=this.targetAngle;
+      this.isActive=false;
      }
 
     if(millis<this.endAlphaAnimation){
@@ -774,60 +773,12 @@ switch (this.easingType) {
 
 }
 
-  display() {
-
-    //strokeCap(SQUARE);
-if(isOffscreen){
   
-
-}else{
-      push();
-      stroke(this.strokeColor);
-      if(fade) {
-        this.fadeTo(this.targetAlpha,0.09);
-        this.strokeColor.setAlpha(this.currentAlpha);
-        stroke(this.strokeColor);
-      }
-
-      translate(this.x,this.y);
-      rotate(this.currentAngle);
-
-    //if(this.hasWind){
-        this.flutter();
-   // }
-
-    if(center){
-      line(-this.diameter/2,0,this.diameter/2,0);
-    }else{
-      if(this.debug){
-        stroke(this.strokeColor);
-        strokeWeight(strokeWidth);
-      }
-
-          
-
-      line(0,0,this.diameter,0);
-    }
-    pop();
-}
-
-    //debug target angle
-    /*
-    push()
-        translate(this.x,this.y);
-
-        stroke(255,0,0);
-        rotate(this.targetAngle);
-        line(0,0,this.diameter,0);
-      pop()
-*/
-    //flutter
-  
-  //      if(this.circleRot<this.rotMax) this.circleRot+=this.rotspeed; 
-  }
 
 hasDisplayed(){
     //this.circleRot+=this.rotspeed; 
+
+   // this.isActive=false;
 
 
   }
@@ -973,8 +924,8 @@ setAlphaDuration(duration){
     return this.rotspeed;
   }
 
-   getStrokecolor(){
-  return this.strokeColor;
+  getStrokecolor(){
+    return this.strokeColor;
  }
 
 
