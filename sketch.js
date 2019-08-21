@@ -11,9 +11,12 @@ let imageArray=[];
 
 let actualImage;
 
+let nullImage; // Declare variable 'img'.
+
+
 
 var theta = 0;
-var rasterwidth = 25;
+var rasterwidth = 18;
 var rasterwidthMin=10;
 var rasterwidthMax=100;
 var rasterwidthBefore=rasterwidth;
@@ -114,31 +117,44 @@ let buffer;
 var isOffscreen=true ;
 
 
-var fixedWindowWidth=1920;
-var fixedWindowHeight=1200;
+//var fixedWindowWidth=1920;
+//var fixedWindowHeight=1200;
 
+
+var fixedWindowWidth=1280
+var fixedWindowHeight=720;
 
 var scaleFact=1;
 
-var fixedBufferWidth=1920*scaleFact;
-var fixedBufferHeight=1200*scaleFact;
+//var fixedBufferWidth=1280*scaleFact;
+//var fixedBufferHeight=800*scaleFact;
 
 
-var fixedBufferWidth=1920;
-var fixedBufferHeight=1200;
+var fixedBufferWidth=1280;
+var fixedBufferHeight=720;
+
+
+var state;
+let oldstate;
+const WAVE =0;
+const CONTENT=1;
+
+var zeroStartX=fixedWindowWidth-50;
+var zeroStartY=0;
 
 
 function preload() {
-    img1 = loadImage('assets/11.png');
-    img2 = loadImage('assets/22.png');
-    img3 = loadImage('assets/33.png');
+    img1 = loadImage('assets/1111.png');
+    img2 = loadImage('assets/2222.png');
+    img3 = loadImage('assets/3333.png');
+    nullImage=loadImage('assets/null.png');
 }
 
 
 let colors;
 
 
-let bIsTimed=true;
+let bIsTimed=false;
 
 let eraseWaveInitTime;
 let eraseWaveTimerDuration;
@@ -197,6 +213,11 @@ function setup() {
   pixelDensity(1);
   gui.hide();
 
+  state=WAVE;
+
+
+    buffer.strokeWeight(strokeWidth);
+
 
 }
 
@@ -229,6 +250,9 @@ if(bIsTimed){
     eraseWaveTimerDuration=random(500,4000);
   }
     if(mil>waveInitTime+waveTimerDuration){
+    actualImageIndex++;
+    actualImage=imageArray[actualImageIndex%imageArray.length];
+    setMask(actualImage);
     makeWave(false);
     waveInitTime=millis();
     waveTimerDuration=random(10000,20000);
@@ -257,6 +281,27 @@ if(bIsTimed){
           actualImage=img6;
         break;
   }*/
+
+
+  buffer.background(255,alphaTrace);
+  clear();
+        
+  updateWind();
+
+
+  switch(state){
+        case WAVE:
+          updateVanes(mil);
+        break;
+
+        case CONTENT:
+          updateVanesInverse(mil);
+        break;
+        
+  }
+
+
+
 
   // Gui changes
   if(rasterwidth!=rasterwidthBefore){
@@ -289,29 +334,85 @@ if(zerowaveIsRunning){
 //flutterWave();
 
   //background(255,255);
-  buffer.background(255,alphaTrace);
-  clear();
 
-  winds.map((wind,i) =>{
+
+
+
+ // push();
+
+
+
+  
+
+  //pop();
+  // blendMode(MULTIPLY);
+  // if(!off)if(isOffscreen)image(buffer,0,0,width,height);
+  // if(!off)if(isOffscreen)image(buffer,0,0,fixedWindowWidth,fixedWindowHeight);
+
+
+
+
+
+     
+    image(buffer,0,0);
+    theta-=0.2;
+    rasterwidthBefore=rasterwidth;
+    
+    let fps = frameRate();
+    fill(255,0,0);
+    noStroke();
+    text("FPS: " + fps.toFixed(2), 10, height - 10);
+
+
+}
+
+
+function changeState(newState){
+  oldstate=state;
+  state=newState;
+
+
+    switch(state){
+        case WAVE:
+        setMask(actualImage);
+        makeEraseWave(false);
+       // makeWave(false);
+
+        var c=select("#content");
+        c.removeClass('fadeIn');
+        c.addClass('fadeOut');
+
+        break;
+
+        case CONTENT:
+        setMask(nullImage);
+        makeWaveWithPosition(zeroStartX,zeroStartY);
+
+        var c=select("#content");
+        c.addClass('fadeIn');
+        c.removeClass('fadeOut');
+
+        break;
+      }
+}
+
+
+function updateWind(){
+
+    winds.map((wind,i) =>{
     wind.move();
     if(wind.getDeleteMe()){
       console.log("delete "+i);
       winds.splice(i,1);
     }
   })
-
- // push();
-  buffer.strokeWeight(strokeWidth);
+}
 
 
-
+function updateVanes(millis){
   for(var i=0;i<vanes.length;i++) {       
       var vane=vanes[i];
-
-       // for(var w=0;w<winds.length;w++) {   
-
-                winds.map((wind,i) =>{
-    
+          winds.map((wind,i) =>{
 
             //var wind=winds[w];
             if (wind.windobject==true){
@@ -330,9 +431,9 @@ if(zerowaveIsRunning){
                setActive(vane,wind);
               };
          }
-        })
+      })
         
-        vane.update(mil);
+        vane.update(millis);
         vane.fadeTo(vane.targetAlpha,0.09);
         vane.strokeColor.setAlpha(vane.currentAlpha);
         buffer.stroke(vane.strokeColor);
@@ -343,26 +444,34 @@ if(zerowaveIsRunning){
       buffer.line(vane.x,vane.y,vane.x+dX,vane.y+dY);
       vane.hasDisplayed();
     }
-
-  //pop();
-  // blendMode(MULTIPLY);
-  // if(!off)if(isOffscreen)image(buffer,0,0,width,height);
-  // if(!off)if(isOffscreen)image(buffer,0,0,fixedWindowWidth,fixedWindowHeight);
-
-
-     
-    image(buffer,0,0);
-    theta-=0.2;
-    rasterwidthBefore=rasterwidth;
-    
-    let fps = frameRate();
-    fill(255,0,0);
-    noStroke();
-    text("FPS: " + fps.toFixed(2), 10, height - 10);
-
-
 }
 
+
+
+function updateVanesInverse(millis){
+  for(var i=0;i<vanes.length;i++) {       
+      var vane=vanes[i];
+          winds.map((wind,i) =>{
+              let outer=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.radius);
+              let inner=check_a_point(vane.x,vane.y,wind.x,wind.y,wind.currentInnerRadius);
+             
+             if(outer &! inner){
+               setActiveInverse(vane,wind);
+              };
+          })
+        
+        vane.update(millis);
+        vane.fadeTo(vane.targetAlpha,0.09);
+        vane.strokeColor.setAlpha(vane.currentAlpha);
+        buffer.stroke(vane.strokeColor);
+
+        var dX=Math.cos(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
+        var dY=Math.sin(vane.getCurrentAngle()+vane.flutter())*rasterwidth;
+
+      buffer.line(vane.x,vane.y,vane.x+dX,vane.y+dY);
+      vane.hasDisplayed();
+    }
+}
 
 function setActive(vane,wind){
   //if(!vane.isActive){
@@ -391,6 +500,36 @@ function setActive(vane,wind){
     }
  // }
 }
+
+
+function setActiveInverse(vane,wind){
+  //if(!vane.isActive){
+  //vane.isActive=true;
+   var angle=wind.angle
+    var duration=wind.duration
+    vane.setDuration(duration);
+    vane.setTargetAngle(angle); 
+    vane.setEasingType(wind.easingType);
+    vane.setColor(wind.color);
+    if(wind.isMasked){
+      if(vane.isOnMask){
+        vane.setDuration(duration+500);
+        vane.setTargetAngle(angle+PI/4); 
+        vane.setAlphaDuration(duration-500);
+        vane.setTargetAlpha(0);
+        vane.setFlutterParams(500,50,0.5)
+      }else{
+        vane.setAlphaDuration(duration-500);
+        //vane.setTargetAlpha(unmaskedAlpha);
+        vane.setTargetAlpha(255);
+        vane.setFlutterParams(500,100,0.05)
+      }
+    }else{
+        vane.setTargetAlpha(255);
+    }
+ // }
+}
+
 
 
 function setActiveDebug(vane,wind){
@@ -541,6 +680,20 @@ function makeWave(isMouse){
 }
 
 
+
+function makeWaveWithPosition(posX,posY){
+    var vel =20;//random(10,20);
+    var col=floor(random(0,colors.length-0.9));
+    var ang=int(random(3,5));
+    if(ang%4==0)ang+=PI/2;
+    var dur=map(ang,3,5,500,1000);//random(500,3000);
+    var wait=dur;
+    var xPos=posX;
+    var yPos=posY;
+    winds.push(new WindWidthParameters(xPos,yPos,vel,ang,dur,0,'easeOutQuad',col,true));
+}
+
+
 function makeEraseWave(isMouse){
     var vel =20;//random(10,20);
     var col=floor(random(0,colors.length-0.9));
@@ -577,10 +730,6 @@ function keyPressed(event){
     actualImage=imageArray[actualImageIndex%imageArray.length];
 
     setMask(actualImage);
-
-
-
-
   }
 
 
@@ -594,14 +743,13 @@ function keyPressed(event){
 
 
   if(event.key=='w'){
-    //winds.push(new Wind(mouseX,mouseY,true));
-    makeWave(true);
+    makeWave(false);
   }
 
 
 
   if(event.key=='z'){
-    makeEraseWave(true);
+    makeEraseWave(false);
   }
 /*
     if(event.key=='z'){
@@ -611,11 +759,11 @@ function keyPressed(event){
 
 
   if(event.key=='h'){
-      localStorage.setItem("rasterwidth", rasterwidth);
+    changeState(CONTENT);
   }
  if(event.key=='H'){
-      alert(localStorage.getItem("rasterwidth"));
-      rasterwidth=localStorage.getItem("rasterwidth");
+         changeState(WAVE);
+
   }
 
 if(event.key=="o"){
@@ -632,7 +780,7 @@ if(event.key=="o"){
 }
 
 function touchEnded() {
-     // makeWaveWithZero();
+    // makeWaveWithZero();
 }
 
 

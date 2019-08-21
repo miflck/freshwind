@@ -8,19 +8,37 @@ canvas {
   z-index: 2;
   mix-blend-mode: multiply;
   border:solid thin green;
-  width:1920px !important;
-  	height: 1200px !important;
-
-
+  width:1280px !important;
+  height: 720px !important;
+  min-width:1280px !important;
+  min-height: 720px !important;
 }
+
 #content{
 	display: block;
 	position: absolute;
-	left:50%;
-	top:20%;
-	border:solid thin red;
+	left:450px;
+	top:180px;
 	z-index: 1;
-	width: 1920px;
-	height: 1200px;
-	border:solid thin red;
+	width: 570px;
+	height: 600px;
+  opacity: 0;
+}
+
+#content.fadeIn{
+    -webkit-transition: opacity 1s ease-in;
+    -moz-transition: opacity 1s ease-in;
+    -o-transition: opacity 1s ease-in;
+    -ms-transition: opacity 1s ease-in;
+    transition: opacity 1s ease-in;
+    opacity: 1;
+}
+
+#content.fadeOut{
+    opacity: 0;
+    -webkit-transition: opacity 1s ease-in;
+    -moz-transition: opacity 1s ease-in;
+    -o-transition: opacity 1s ease-in;
+    -ms-transition: opacity 1s ease-in;
+    transition: opacity 1s ease-in;
 }

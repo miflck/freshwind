@@ -4,6 +4,42 @@
 		"selected_items":
 		[
 			[
+				"zer",
+				"zeroStartY"
+			],
+			[
+				"fixed",
+				"fixedWindowWidth"
+			],
+			[
+				"zero",
+				"zeroStartX"
+			],
+			[
+				"nu",
+				"nullImage"
+			],
+			[
+				"ac",
+				"actualImage"
+			],
+			[
+				"new",
+				"newState"
+			],
+			[
+				"fixedB",
+				"fixedBufferWidth"
+			],
+			[
+				"wave",
+				"waveTimerDuration"
+			],
+			[
+				"make",
+				"makeEraseWave"
+			],
+			[
 				"fix",
 				"fixedWindowWidth"
 			],
@@ -194,10 +230,6 @@
 			[
 				"tht",
 				"thetaAngle"
-			],
-			[
-				"wave",
-				"waveNum"
 			],
 			[
 				"wa",
@@ -410,10 +442,6 @@
 			[
 				"joint",
 				"jointpos"
-			],
-			[
-				"new",
-				"newpos"
 			]
 		]
 	},
@@ -423,26 +451,7 @@
 			"file": "sketch.js",
 			"settings":
 			{
-				"buffer_size": 25226,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "style.css",
-			"settings":
-			{
-				"buffer_size": 385,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "index.html",
-			"settings":
-			{
-				"buffer_size": 1524,
-				"encoding": "UTF-8",
+				"buffer_size": 27852,
 				"line_ending": "Unix"
 			}
 		}
@@ -496,8 +505,8 @@
 	],
 	"file_history":
 	[
-		"/Users/fgm4/htdocs_Mamp/freshWind/index.html",
 		"/Users/fgm4/htdocs_Mamp/freshWind/style.css",
+		"/Users/fgm4/htdocs_Mamp/freshWind/index.html",
 		"/Users/fgm4/htdocs_Mamp/freshWind/sketch.js",
 		"/Users/fgm4/htdocs_Mamp/p5js_webgl/assets/Bryant-Regular.otf",
 		"/Users/fgm4/htdocs_Mamp/freshWind/sftp-config.json",
@@ -642,6 +651,36 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"fade",
+			"nullImage",
+			"changeState",
+			"state",
+			"setState",
+			"state",
+			"createVanes",
+			"makeVanes",
+			"img1",
+			"imageArray",
+			"actualImage",
+			"setMask",
+			"images",
+			"bIsTimed",
+			"WindWidthParameters",
+			"isMasked",
+			"bIsTimed",
+			"setActive",
+			"this.isActive",
+			"getAlphaVal",
+			"getAlpha",
+			"pg",
+			"unmaskedAlpha",
+			"unmasekd",
+			"alphaTrace",
+			"alpha",
+			"makeWave",
+			"makeEraseWave",
+			"setMask",
+			"actualImage",
 			"getAlphaVal",
 			"localStorage",
 			"images",
@@ -739,37 +778,7 @@
 			"duration",
 			"targetAlpha",
 			"fade",
-			"mouse",
-			"strokeWidth",
-			"isOffscreen",
-			"pg",
-			"Buffer",
-			"pg",
-			"getCurrentAngle",
-			"strokeWidth",
-			"colorM",
-			"colors",
-			"color",
-			"strokeco",
-			"durationDilitation",
-			"actualImage",
-			"actualImageIndex",
-			"images",
-			"actualImage",
-			"images",
-			"img1",
-			"targetAlpha",
-			"alpha",
-			"fade",
-			"setAlpha",
-			"flutterSpeed",
-			"rotMax",
-			"setTargetAngle",
-			"setRotationInRad",
-			"startAnimation",
-			"console.log",
-			"targetAngle",
-			"getTargetAngle"
+			"mouse"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -793,18 +802,18 @@
 				{
 					"buffer": 0,
 					"file": "sketch.js",
-					"semi_transient": false,
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 25226,
+						"buffer_size": 27852,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9927,
-								9844
+								6201,
+								6205
 							]
 						],
 						"settings":
@@ -816,75 +825,11 @@
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 2.0,
-						"translation.y": 7793.0,
+						"translation.x": 0.0,
+						"translation.y": 3615.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "style.css",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 385,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								214,
-								214
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/CSS/CSS.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "index.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1524,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1013,
-								1013
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
 					"type": "text"
 				}
 			]
